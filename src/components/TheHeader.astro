@@ -81,16 +81,16 @@ const links = stories.map((s) => ({
   .nav {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs-xl);
-    @media screen and (min-width: 628px) {
+    gap: var(--space-3xs);
+    @media screen and (min-width: 732px) {
       display: grid;
       grid-template-columns: 1fr 2fr 1fr;
       align-items: center;
       justify-items: center;
+      gap: var(--space-xs-xl);
     }
     &__home {
       justify-self: flex-start;
-      font-size: var(--step-1);
       font-weight: 700;
       white-space: nowrap;
     }
@@ -98,13 +98,12 @@ const links = stories.map((s) => ({
     &__group {
       display: flex;
       gap: var(--space-s-l);
-      font-size: var(--step--1);
 
       &--lang {
         justify-self: flex-end;
         font-weight: 700;
         text-transform: uppercase;
-        gap: var(--space-s-l);
+        gap: var(--space-s-m);
       }
     }
     .lang-divider {

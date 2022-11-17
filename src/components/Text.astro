@@ -1,0 +1,17 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import { renderRichText } from "@storyblok/astro";
+
+const { blok } = Astro.props;
+
+const renderedRichText = renderRichText(blok.text);
+---
+
+<div
+  {...storyblokEditable(blok)}
+  style={{
+    maxWidth: `${blok.width}ch`,
+  }}
+  set:html={renderedRichText}
+>
+</div>

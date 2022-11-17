@@ -19,8 +19,8 @@ const { blok } = Astro.props;
             <Picture
               class="entryList__picture"
               src={e.filename}
-              widths={[320, 400, 628, size.width]}
-              sizes={`(max-width: 628px) 100vw, ${size.width}px`}
+              widths={[320, 400, 732, size.width]}
+              sizes={`(max-width: 732px) 100vw, ${size.width}px`}
               aspectRatio={aspectRatio}
               alt={e.alt ?? ""}
               title={e.title}
@@ -47,7 +47,7 @@ const { blok } = Astro.props;
     padding: 0;
     list-style: none;
 
-    @media screen and (min-width: 628px) {
+    @media screen and (min-width: 732px) {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
       justify-items: center;

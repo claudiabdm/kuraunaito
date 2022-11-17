@@ -97,7 +97,6 @@ body {
 /* Remove default style decoration for links */
 a {
   color: var(--primary);
-  text-decoration: none;
   text-decoration-skip-ink: none;
 }
 a:visited {
@@ -140,4 +139,19 @@ Fonts
 */
 body {
   font-family: "Roboto Slab", serif;
+}
+
+h1 {
+  font-size: var(--step-2);
+}
+
+h2 {
+  font-size: var(--step-1);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--step-0);
 }

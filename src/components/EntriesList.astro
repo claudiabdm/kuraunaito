@@ -81,8 +81,8 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
       <Picture
         class="container__picture"
         src={defaultImage.filename}
-        widths={[400, 628, sizeDefaultImage.width]}
-        sizes={`(max-width: 628px) 100vw, ${sizeDefaultImage.width}px`}
+        widths={[400, 732, sizeDefaultImage.width]}
+        sizes={`(max-width: 732px) 100vw, ${sizeDefaultImage.width}px`}
         aspectRatio={aspectRatioDefaultImage}
         alt={defaultImage.alt}
         title={defaultImage.title}
@@ -97,9 +97,9 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
     display: flex;
     flex-direction: column;
     gap: var(--space-xs-xl);
-    @media screen and (min-width: 628px) {
+    @media screen and (min-width: 732px) {
       display: grid;
-      grid-template-columns: 1fr 3fr;
+      grid-template-columns: 1fr 2fr;
       justify-items: flex-end;
     }
 
@@ -112,16 +112,14 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
       width: 100%;
       height: auto;
       aspect-ratio: 1/1;
-      object-fit: contain;
-      object-position: center;
-      margin-top: var(--space-s-l);
+      object-fit: cover;
+      object-position: right;
     }
   }
 
   .linkList {
     margin: 0;
     padding: 0;
-    font-size: var(--step--1);
     list-style: none;
 
     &__elem {
