@@ -8,10 +8,20 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "https-dev": "astro dev & local-ssl-proxy --source 3010 --target 3000 --cert localhost.pem --key localhost-key.pem"
   },
   "dependencies": {
+    "@astrojs/image": "^0.11.4",
+    "@astrojs/sitemap": "^1.0.0",
+    "@fontsource/roboto-slab": "^4.5.9",
     "@storyblok/astro": "^1.1.1",
-    "astro": "^1.6.0"
+    "astro": "^1.6.0",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "sass": "^1.56.1",
+    "sharp": "^0.31.2"
   }
 }

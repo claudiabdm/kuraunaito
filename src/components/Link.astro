@@ -1,0 +1,25 @@
+---
+const { href, active, first, className } = Astro.props;
+---
+
+<a href={href} class:list={["link", className, { active, first }]}>
+  <slot />
+</a>
+
+<style lang="scss">
+  .link {
+
+    &.active:not(.first)  {
+      color: var(--secondary);
+    }
+    &:hover:not(.first) {
+      animation: color 0.2s forwards;
+    }
+  }
+
+  @keyframes color {
+    to {
+      color: var(--secondary);
+    }
+  }
+</style>

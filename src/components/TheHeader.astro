@@ -1,0 +1,119 @@
+---
+import { useStoryblokApi } from "@storyblok/astro";
+import { getVersion } from "../utils/functions";
+import Link from "./Link.astro";
+
+const { path } = Astro.params;
+const { slug, lang, translatedSlug } = Astro.props;
+const storyblokApi = useStoryblokApi();
+
+// Get menu links from config file
+const { data } = await storyblokApi.get(`cdn/stories/config`, {
+  version: getVersion(),
+});
+
+// Get stories by ordered uuids
+const {
+  data: { stories },
+} = await storyblokApi.get(
+  `cdn/stories?by_uuids_ordered=${data.story.content.headerMenu}&language=${
+    lang ?? "en"
+  }`,
+  {
+    version: getVersion(),
+  }
+);
+
+// Formatted links
+const links = stories.map((s) => ({
+  slug: s.slug,
+  localizedSlug: s.full_slug,
+  name:
+    s.content.title ||
+    s.translated_slugs.find((ts) => ts.lang === lang)?.name ||
+    s.name,
+}));
+---
+
+<header class="header">
+  <nav class="nav">
+    <!-- Home -->
+    <h1 class="nav__home">
+      <Link href={`/${links[0].localizedSlug}`} first={true}>
+        {links[0].name}
+      </Link>
+    </h1>
+
+    <!-- Pages -->
+    <section class="nav__group">
+      {
+        links?.slice(1).map((l, i) => (
+          <Link
+            href={`/${l.localizedSlug}`}
+            active={String(path).includes(l.localizedSlug.slice(0, -1))}
+          >
+            {l.name}
+          </Link>
+        ))
+      }
+    </section>
+
+    <!-- Languages -->
+    <section class="nav__group nav__group--lang">
+      <Link href={`/${slug}`} active={lang !== "es"}>en</Link>
+      <hr class="lang-divider" />
+      <Link
+        href={`/es/${translatedSlug?.get("es")?.path}`}
+        active={lang === "es"}
+      >
+        es
+      </Link>
+    </section>
+  </nav>
+</header>
+
+<style lang="scss">
+  .header {
+    padding: var(--space-s) var(--space-l);
+    margin-bottom: var(--space-s);
+    text-transform: capitalize;
+  }
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs-xl);
+    @media screen and (min-width: 628px) {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      justify-items: center;
+    }
+    &__home {
+      justify-self: flex-start;
+      font-size: var(--step-1);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    &__group {
+      display: flex;
+      gap: var(--space-s-l);
+      font-size: var(--step--1);
+
+      &--lang {
+        justify-self: flex-end;
+        font-weight: 700;
+        text-transform: uppercase;
+        gap: var(--space-s-l);
+      }
+    }
+    .lang-divider {
+      margin: 0;
+      border: none;
+      &::before {
+        content: "|";
+        color: var(--tertiary);
+      }
+    }
+  }
+</style>

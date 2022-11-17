@@ -1,0 +1,76 @@
+---
+import { useStoryblokApi } from "@storyblok/astro";
+import { getTranslatedName, getVersion } from "../utils/functions";
+import Link from "./Link.astro";
+
+const storyblokApi = useStoryblokApi();
+const { path } = Astro.params;
+const { slug, lang } = Astro.props;
+
+const slugsArray = slug?.split("/");
+const slugs = slugsArray?.map(
+  (_, i) =>
+    slugsArray.slice(0, i + 1).join("/") +
+    (i < slugsArray.length - 1 || i === 0 ? "/" : "")
+);
+
+const {
+  data: { stories },
+} = await storyblokApi.get(`cdn/stories?by_slugs=${slugs}&language=${lang}`, {
+  version: getVersion(),
+});
+
+const breadcrumbs = stories.map((s) => ({
+  name: getTranslatedName(s),
+  href: s.full_slug,
+}));
+---
+
+{
+  (
+    <h2>
+      <ul class="breadcrumb">
+        {breadcrumbs.map((b, i) => (
+          <li class="breadcrumb__item">
+            <Link
+              href={`/${b.href}`}
+              active={i > 0 && b.href.includes(path)}
+              first={i === 0 && breadcrumbs.length === 1}
+            >
+              {b.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </h2>
+  )
+}
+
+<style lang="scss">
+  .breadcrumb {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, max-content));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+    text-transform: capitalize;
+
+    &__item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      & {
+        font-weight: 700;
+      }
+      & + & {
+        &::before {
+          content: "/";
+          color: var(--tertiary);
+          margin: 0 var(--space-3xs);
+        }
+      }
+    }
+  }
+</style>

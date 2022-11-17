@@ -1,0 +1,57 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import { Picture } from "@astrojs/image/components";
+import { getAspectRatio, getSize } from "../utils/functions";
+import Breadcrumbs from "./Breadcrumbs.astro";
+
+const { blok } = Astro.props;
+---
+
+<section class="entry">
+  <Breadcrumbs {...Astro.props} />
+  <ul class="entryList" {...storyblokEditable(blok)}>
+    {
+      blok.entries?.map((e, i) => {
+        const size = getSize(e.filename);
+        const aspectRatio = getAspectRatio(e);
+        return (
+          <li class="entryList__elem">
+            <Picture
+              class="entryList__picture"
+              src={e.filename}
+              widths={[320, 400, 628, size.width]}
+              sizes={`(max-width: 628px) 100vw, ${size.width}px`}
+              aspectRatio={aspectRatio}
+              alt={e.alt ?? ""}
+              title={e.title}
+              loading={i > 2 ? "lazy" : "eager"}
+            />
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>
+
+<style lang="scss">
+  .entry {
+    display: grid;
+    gap: var(--space-s-m);
+    padding-bottom: var(--space-s-m);
+  }
+  .entryList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs-s);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (min-width: 628px) {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      justify-items: center;
+      align-items: flex-end;
+    }
+  }
+</style>

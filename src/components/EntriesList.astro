@@ -1,0 +1,140 @@
+---
+import { useStoryblokApi } from "@storyblok/astro";
+import { getAspectRatio, getVersion } from "../utils/functions";
+import { Picture } from "@astrojs/image/components";
+import { getTranslatedName, getYear, getSize } from "../utils/functions";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import Link from "./Link.astro";
+
+const storyblokApi = useStoryblokApi();
+const { slug, lang, blok, translatedSlug } = Astro.props;
+
+const {
+  data: { stories },
+} = await storyblokApi.get(
+  `cdn/stories?starts_with=${slug}&sort_by=published_at:asc&language=${lang}`,
+  {
+    version: getVersion(),
+  }
+);
+
+// Display stories and folders that are in current folder
+const root = stories.find(
+  (s) => s.translated_slugs[0].path === translatedSlug.get("es").path
+);
+const storiesInRoot = stories.filter(
+  (s) =>
+    s !== root || (s.is_starpage == false && s.parent_id !== root.parent_id)
+);
+
+const defaultImage = blok.defaultImage.filename
+  ? blok.defaultImage
+  : storiesInRoot[0].content.entries?.[0];
+
+const aspectRatioDefaultImage = getAspectRatio(defaultImage);
+const sizeDefaultImage = getSize(defaultImage?.filename);
+---
+
+<div class="container">
+  <section class="container__nav">
+    <Breadcrumbs {...Astro.props} />
+
+    <ul class="linkList">
+      {
+        storiesInRoot.map((s, i) => (
+          <li class="linkList__elem">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="13"
+              height="26"
+              viewBox="0 0 13 26"
+              fill="none"
+              stroke="var(--secondary)"
+              stroke-width="1.5"
+            >
+              <line
+                x1="1"
+                y1="13"
+                x2="13"
+                y2="13"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <line
+                x1="1"
+                y1="1"
+                x2="1"
+                y2={i < storiesInRoot.length - 1 ? 26 : 13}
+              />
+            </svg>
+            <Link href={`/${s.full_slug}`} className="linkList__link">
+              {getTranslatedName(s)} - {getYear(s.content.year)}
+            </Link>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    defaultImage && (
+      <Picture
+        class="container__picture"
+        src={defaultImage.filename}
+        widths={[400, 628, sizeDefaultImage.width]}
+        sizes={`(max-width: 628px) 100vw, ${sizeDefaultImage.width}px`}
+        aspectRatio={aspectRatioDefaultImage}
+        alt={defaultImage.alt}
+        title={defaultImage.title}
+        loading="eager"
+      />
+    )
+  }
+</div>
+
+<style lang="scss">
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs-xl);
+    @media screen and (min-width: 628px) {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      justify-items: flex-end;
+    }
+
+    &__nav {
+      width: 100%;
+      justify-self: flex-start;
+    }
+
+    &__picture {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+      object-position: center;
+      margin-top: var(--space-s-l);
+    }
+  }
+
+  .linkList {
+    margin: 0;
+    padding: 0;
+    font-size: var(--step--1);
+    list-style: none;
+
+    &__elem {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      height: 24px;
+      align-items: center;
+      gap: 0 var(--space-3xs);
+    }
+    &__link {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+</style>

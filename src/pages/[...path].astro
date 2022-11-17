@@ -1,0 +1,23 @@
+---
+import { useStoryblokApi } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import { generatePathsFromStories, getVersion } from "../utils/functions";
+import Layout from "../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  return generatePathsFromStories();
+}
+const { lang, title, slug, translatedSlug } = Astro.props;
+const storyblokApi = useStoryblokApi();
+const { data } = await storyblokApi.get(
+  `cdn/stories/${slug}?language=${lang}`,
+  {
+    version: getVersion(),
+  }
+);
+const story = data?.story;
+---
+
+<Layout {...{ title, slug, lang, translatedSlug }}>
+  <StoryblokComponent {...Astro.props} blok={story?.content} />
+</Layout>

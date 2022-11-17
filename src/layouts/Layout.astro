@@ -1,35 +1,38 @@
 ---
-export interface Props {
-	title: string;
-}
+import "@fontsource/roboto-slab";
+import "../styles/global.css";
+import TheHeader from "../components/TheHeader.astro";
 
-const { title } = Astro.props;
+const { title, slug, lang, translatedSlug } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Marina Sastre's Portfolio" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="body">
+    <TheHeader {...{slug, lang, translatedSlug}} />
+    <main class="main">
+      <slot />
+    </main>
+    <style lang="scss">
+      .body {
+        max-width: 1040px;
+        margin-left: auto;
+        margin-right: auto;
+        color: var(--primary);
+        font-size: 16px;
+      }
+      .main {
+        padding: 0 var(--space-l);
+      }
+
+    </style>
+  </body>
 </html>
-<style is:global>
-	:root {
-		--accent: 124, 58, 237;
-		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background-color: #F6F6F6;
-	}
-	code {
-		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-			Bitstream Vera Sans Mono, Courier New, monospace;
-	}
-</style>

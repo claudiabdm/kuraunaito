@@ -1,0 +1,143 @@
+/*
+Variables
+*/
+:root {
+  /* 
+  Space Scale
+  */
+  /* @link https://utopia.fyi/space/calculator?c=320,16,1.2,1140,24,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l|xs-xl */
+  --space-3xs: clamp(0.25rem, calc(0.2rem + 0.24vw), 0.38rem);
+  --space-2xs: clamp(0.5rem, calc(0.4rem + 0.49vw), 0.75rem);
+  --space-xs: clamp(0.75rem, calc(0.6rem + 0.73vw), 1.13rem);
+  --space-s: clamp(1rem, calc(0.8rem + 0.98vw), 1.5rem);
+  --space-m: clamp(1.5rem, calc(1.21rem + 1.46vw), 2.25rem);
+  --space-l: clamp(2rem, calc(1.61rem + 1.95vw), 3rem);
+  --space-xl: clamp(3rem, calc(2.41rem + 2.93vw), 4.5rem);
+  --space-2xl: clamp(4rem, calc(3.22rem + 3.9vw), 6rem);
+  --space-3xl: clamp(6rem, calc(4.83rem + 5.85vw), 9rem);
+
+  /* One-up pairs */
+  --space-3xs-2xs: clamp(0.25rem, calc(0.05rem + 0.98vw), 0.75rem);
+  --space-2xs-xs: clamp(0.5rem, calc(0.26rem + 1.22vw), 1.13rem);
+  --space-xs-s: clamp(0.75rem, calc(0.46rem + 1.46vw), 1.5rem);
+  --space-s-m: clamp(1rem, calc(0.51rem + 2.44vw), 2.25rem);
+  --space-m-l: clamp(1.5rem, calc(0.91rem + 2.93vw), 3rem);
+  --space-l-xl: clamp(2rem, calc(1.02rem + 4.88vw), 4.5rem);
+  --space-xl-2xl: clamp(3rem, calc(1.83rem + 5.85vw), 6rem);
+  --space-2xl-3xl: clamp(4rem, calc(2.05rem + 9.76vw), 9rem);
+
+  /* Custom pairs */
+  --space-s-l: clamp(1rem, calc(0.22rem + 3.9vw), 3rem);
+  --space-xs-xl: clamp(0.75rem, calc(-0.71rem + 7.32vw), 4.5rem);
+
+  /*
+  Type Scale
+  */
+  /* @link https://utopia.fyi/type/calculator?c=320,16,1.067,1140,16,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+  --step--2: clamp(0.64rem, calc(0.97rem + -0.46vw), 0.88rem);
+  --step--1: clamp(0.8rem, calc(0.99rem + -0.27vw), 0.94rem);
+  --step-0: clamp(1rem, calc(1rem + 0vw), 1rem);
+  --step-1: clamp(1.07rem, calc(1rem + 0.36vw), 1.25rem);
+  --step-2: clamp(1.14rem, calc(0.97rem + 0.83vw), 1.56rem);
+  --step-3: clamp(1.22rem, calc(0.93rem + 1.44vw), 1.95rem);
+  --step-4: clamp(1.3rem, calc(0.85rem + 2.23vw), 2.44rem);
+  --step-5: clamp(1.38rem, calc(0.73rem + 3.26vw), 3.05rem);
+
+  /* 
+  Color 
+  */
+  --primary: #1e1e1e;
+  --secondary: #767676;
+  --tertiary: #333;
+}
+
+/* 
+Reset 
+*/
+/* @link https://piccalil.li/blog/a-modern-css-reset/ */
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Remove default style decoration for links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  text-decoration-skip-ink: none;
+}
+a:visited {
+  color: inherit;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+Fonts
+*/
+body {
+  font-family: "Roboto Slab", serif;
+}
