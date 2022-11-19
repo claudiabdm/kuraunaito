@@ -1,8 +1,8 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
-import { Picture } from "@astrojs/image/components";
-import { getAspectRatio, getSize } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
+
+import StoryblokImage from "./StoryblokImage.astro";
 
 const { blok } = Astro.props;
 ---
@@ -12,20 +12,9 @@ const { blok } = Astro.props;
   <ul class="entryList" {...storyblokEditable(blok)}>
     {
       blok.entries?.map((e, i) => {
-        const size = getSize(e.filename);
-        const aspectRatio = getAspectRatio(e);
         return (
           <li class="entryList__elem">
-            <Picture
-              class="entryList__picture"
-              src={e.filename}
-              widths={[320, 400, 732, size.width]}
-              sizes={`(max-width: 732px) 100vw, ${size.width}px`}
-              aspectRatio={aspectRatio}
-              alt={e.alt ?? ""}
-              title={e.title}
-              loading={i > 2 ? "lazy" : "eager"}
-            />
+            <StoryblokImage blok={e} preload={i < 3} />
           </li>
         );
       })
@@ -49,9 +38,9 @@ const { blok } = Astro.props;
 
     @media screen and (min-width: 732px) {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       justify-items: center;
-      align-items: flex-end;
+      align-items: center;
     }
   }
 </style>

@@ -1,5 +1,3 @@
-import type { Params, Props } from "astro";
-
 export interface SbLink {
   slug: string;
   name: string;
@@ -22,4 +20,12 @@ export interface Path {
     title: string;
     translatedSlug?: Map<string, { path: string; name: string }>; // K is language code
   };
+}
+
+export interface Image {
+  width: number;
+  height: number;
+  id: string;
+  alt: string;
+  filename: string;
 }

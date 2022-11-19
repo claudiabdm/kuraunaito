@@ -1,8 +1,8 @@
 import { defineConfig } from "astro/config";
-import image from "@astrojs/image";
 import sitemap from "@astrojs/sitemap";
 import storyblok from "@storyblok/astro";
 import * as dotenv from "dotenv";
+
 dotenv.config();
 const storyblokConfig =
   process.env.STORYBLOK_PREVIEW_ENABLED === "true"
@@ -38,6 +38,5 @@ export default defineConfig({
         entriesList: "components/EntriesList",
       },
     }),
-    image(),
   ],
 });

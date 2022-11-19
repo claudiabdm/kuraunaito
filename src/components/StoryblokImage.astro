@@ -1,0 +1,120 @@
+---
+const {
+  blok,
+  autoSize = true,
+  imageClass,
+  sizeList = [400, 640, 768, 1280, 2048],
+  breakpoints = [320, 400, 640, 768, 1280, 2048],
+  preload = false,
+  formats = ["webp", "avif", "png"],
+  aspectRatio = "auto",
+} = Astro.props;
+
+const src = createSrc(blok.filename, "1280x0/smart");
+const srcset = {
+  png: createSrcset(blok.filename, "filters:format(png)", sizeList),
+  webp: createSrcset(blok.filename, "filters:format(webp)", sizeList),
+};
+
+function createSrcset(
+  image: string,
+  imageOptions: string,
+  sizeList: number[] = [320, 640]
+): string[] {
+  const srcset = [];
+  for (const size of sizeList) {
+    const src = createSrc(image, `${size}x0/${imageOptions}`);
+    srcset.push(`${src} ${size}w`);
+  }
+  return srcset;
+}
+
+function createSrc(image: string, imageOptions: string): string {
+  const path = `${image}/m/${imageOptions}`;
+  return path || "";
+}
+---
+
+<picture class="picture">
+  {
+    (
+      <>
+        {formats?.map((format) => (
+          <>
+            <source
+              srcset={`${srcset[format]?.[0]}`}
+              media={`(max-width: ${breakpoints[0]}px)`}
+              type={`image/${format}`}
+            />
+            {srcset[format]?.map((srcsetStr, index) => (
+              <source
+                srcset={srcsetStr}
+                media={`${`(min-width: ${
+                  breakpoints[index]
+                }px) and (max-width: ${breakpoints[index + 1]}px)`}`}
+                type={`image/${format}`}
+              />
+            ))}
+            <source
+              srcset={`${srcset[format]?.[srcset[format].length - 1]}`}
+              media={`(min-width: ${
+                breakpoints[breakpoints.length - 1] + 1
+              }px)`}
+              type={`image/${format}`}
+            />
+          </>
+        ))}
+        <img
+          class:list={["image", { "image--auto-size": autoSize }, imageClass]}
+          style={{
+            aspectRatio,
+          }}
+          alt={blok.alt ?? ""}
+          width={blok.width}
+          height={blok.height}
+          src={src}
+          loading={preload ? "eager" : "lazy"}
+        />
+      </>
+    )
+  }
+</picture>
+
+<!-- Activate when dark mode is enable
+<svg style="width: 0; height: 0">
+  <filter id="darken">
+    <feColorMatrix
+      type="matrix"
+      values="0.75 0 0 0 0
+                0 0.75 0 0 0
+                0 0 0.75 0 0
+                0 0 0 1 0 "
+    ></feColorMatrix>
+  </filter>
+</svg> -->
+
+<style lang="scss">
+  @use "sass:math";
+
+  .picture {
+    position: relative;
+  }
+
+  .image {
+    display: block;
+    max-width: 100%;
+    object-position: center;
+    &--auto-size {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: left;
+    }
+  }
+
+  // .dark-scheme {
+  //   .image:not(.image.image--photo-modal) {
+  //     filter: url(#darken);
+  //   }
+  // }
+</style>

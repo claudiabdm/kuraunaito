@@ -1,10 +1,10 @@
 ---
 import { useStoryblokApi } from "@storyblok/astro";
-import { getAspectRatio, getVersion } from "../utils/functions";
-import { Picture } from "@astrojs/image/components";
+import { getVersion } from "../utils/functions";
 import { getTranslatedName, getYear, getSize } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
+import StoryblokImage from "./StoryblokImage.astro";
 
 const storyblokApi = useStoryblokApi();
 const { slug, lang, blok, translatedSlug } = Astro.props;
@@ -30,9 +30,6 @@ const storiesInRoot = stories.filter(
 const defaultImage = blok.defaultImage.filename
   ? blok.defaultImage
   : storiesInRoot[0].content.entries?.[0];
-
-const aspectRatioDefaultImage = getAspectRatio(defaultImage);
-const sizeDefaultImage = getSize(defaultImage?.filename);
 ---
 
 <div class="container">
@@ -45,18 +42,18 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
           <li class="linkList__elem">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="13"
-              height="26"
-              viewBox="0 0 13 26"
+              width="25"
+              height="50"
+              viewBox="0 0 25 50"
               fill="none"
               stroke="var(--secondary)"
               stroke-width="1.5"
             >
               <line
                 x1="1"
-                y1="13"
-                x2="13"
-                y2="13"
+                y1="25"
+                x2="25"
+                y2="25"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
@@ -64,7 +61,7 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
                 x1="1"
                 y1="1"
                 x2="1"
-                y2={i < storiesInRoot.length - 1 ? 26 : 13}
+                y2={i < storiesInRoot.length - 1 ? 50 : 25}
               />
             </svg>
             <Link href={`/${s.full_slug}`} className="linkList__link">
@@ -78,25 +75,13 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
 
   {
     defaultImage && (
-      <Picture
-        class="container__picture"
-        src={defaultImage.filename}
-        widths={[400, 732, sizeDefaultImage.width]}
-        sizes={`(max-width: 732px) 100vw, ${sizeDefaultImage.width}px`}
-        aspectRatio={aspectRatioDefaultImage}
-        alt={defaultImage.alt}
-        title={defaultImage.title}
-        loading="eager"
-      />
+      <StoryblokImage aspectRatio="1/1" blok={defaultImage} preload={true} />
     )
   }
 </div>
 
 <style lang="scss">
   .container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs-xl);
     @media screen and (min-width: 732px) {
       display: grid;
       grid-template-columns: 1fr 2fr;
@@ -125,7 +110,7 @@ const sizeDefaultImage = getSize(defaultImage?.filename);
     &__elem {
       display: grid;
       grid-template-columns: auto 1fr;
-      height: 24px;
+      height: 48px;
       align-items: center;
       gap: 0 var(--space-3xs);
     }
