@@ -2,8 +2,9 @@
 import "@fontsource/roboto-slab";
 import "../styles/global.css";
 import TheHeader from "../components/TheHeader.astro";
+import SocialMeta from "../components/SocialMeta.astro";
 
-const { title, slug, lang, translatedSlug } = Astro.props;
+const { title, slug, lang, translatedSlug, meta } = Astro.props;
 
 const capitalizeTitle = title
   .split(" ")
@@ -15,10 +16,10 @@ const capitalizeTitle = title
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Marina Sastre's Portfolio" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <SocialMeta meta={meta} title={title} />
     <title>{capitalizeTitle}</title>
   </head>
   <body class="body">

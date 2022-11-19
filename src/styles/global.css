@@ -86,6 +86,9 @@ ol[role="list"] {
 html:focus-within {
   scroll-behavior: smooth;
 }
+*:focus-visible {
+  outline: var(--primary) dashed 1px;
+}
 
 /* Set core body defaults */
 body {

@@ -13,7 +13,7 @@ const { blok } = Astro.props;
     {
       blok.entries?.map((e, i) => {
         return (
-          <li class="entryList__elem">
+          <li class="entryList__elem" tabindex="0">
             <StoryblokImage blok={e} preload={i < 3} />
           </li>
         );
