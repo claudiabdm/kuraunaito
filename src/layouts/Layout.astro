@@ -4,17 +4,22 @@ import "../styles/global.css";
 import TheHeader from "../components/TheHeader.astro";
 
 const { title, slug, lang, translatedSlug } = Astro.props;
+
+const capitalizeTitle = title
+  .split(" ")
+  .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1))
+  .join(" ");
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Marina Sastre's Portfolio" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{capitalizeTitle}</title>
   </head>
   <body class="body">
     <TheHeader {...{slug, lang, translatedSlug}} />
@@ -26,11 +31,9 @@ const { title, slug, lang, translatedSlug } = Astro.props;
         max-width: 1040px;
         margin-left: auto;
         margin-right: auto;
+        padding: var(--space-xs-s) var(--space-s-l);
         color: var(--primary);
         font-size: var(--step-0);
-      }
-      .main {
-        padding: var(--space-l);
       }
     </style>
   </body>

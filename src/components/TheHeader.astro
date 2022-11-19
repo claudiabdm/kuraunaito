@@ -74,36 +74,41 @@ const links = stories.map((s) => ({
 
 <style lang="scss">
   .header {
-    padding: var(--space-s) var(--space-l);
-    margin-bottom: var(--space-s);
+    margin-bottom: var(--space-xl-2xl);
     text-transform: capitalize;
   }
   .nav {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3xs);
+    display: grid;
+    gap: var(--space-l);
+    grid-template-areas:
+      "title lang"
+      "nav nav";
     @media screen and (min-width: 732px) {
-      display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
+      grid-template-areas: "title nav lang";
       align-items: center;
       justify-items: center;
       gap: var(--space-xs-xl);
     }
     &__home {
+      grid-area: title;
       justify-self: flex-start;
       font-weight: 700;
       white-space: nowrap;
     }
 
     &__group {
+      grid-area: nav;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: var(--space-s-l);
 
       &--lang {
+        grid-area: lang;
         justify-self: flex-end;
+        gap: var(--space-s-m);
         font-weight: 700;
         text-transform: uppercase;
-        gap: var(--space-s-m);
       }
     }
     .lang-divider {
