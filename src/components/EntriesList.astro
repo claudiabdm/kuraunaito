@@ -22,9 +22,10 @@ const {
 const root = stories.find(
   (s) => s.translated_slugs[0].path === translatedSlug.get("es").path
 );
+const level = root.full_slug.split("/").length - 1;
 const storiesInRoot = stories.filter(
   (s) =>
-    s !== root || (s.is_starpage == false && s.parent_id !== root.parent_id)
+    s !== root && s.full_slug.split("/").filter((s) => s).length === level + 1
 );
 
 const defaultImage = blok.defaultImage.filename
