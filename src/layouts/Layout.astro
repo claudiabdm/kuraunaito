@@ -2,25 +2,15 @@
 import "@fontsource/roboto-slab";
 import "../styles/global.css";
 import TheHeader from "../components/TheHeader.astro";
-import SocialMeta from "../components/SocialMeta.astro";
+import Meta from "../components/Meta.astro";
 
-const { title, slug, lang, translatedSlug, meta } = Astro.props;
-
-const capitalizeTitle = title
-  .split(" ")
-  .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1))
-  .join(" ");
+const { title, slug, lang, translatedSlug, seo } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang={lang}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <SocialMeta meta={meta} title={title} />
-    <title>{capitalizeTitle}</title>
+    <Meta seo={seo} title={title} />
   </head>
   <body class="body">
     <TheHeader {...{slug, lang, translatedSlug}} />

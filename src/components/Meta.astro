@@ -1,7 +1,12 @@
 ---
 const { meta, title } = Astro.props;
 
-const defaultTitle = meta?.title || title;
+const capitalizeTitle = (meta?.title || title || "")
+  .split(" ")
+  .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1))
+  .join(" ");
+
+const defaultTitle = capitalizeTitle;
 const defaultDescription = meta?.description || defaultTitle;
 const metaTags = [
   { name: "title", content: defaultTitle },
@@ -31,6 +36,10 @@ const metaTags = [
 ---
 
 <>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{capitalizeTitle}</title>
   {
     metaTags.map(({ name, content }) => {
       if (name.includes("og")) {

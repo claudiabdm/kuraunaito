@@ -18,6 +18,6 @@ const { data } = await storyblokApi.get(`cdn/stories/home`, {
 const story = data?.story;
 ---
 
-<Layout {...{...props, meta: story.content.seo}}>
+<Layout {...{...props, seo: story.content.seo}}>
   <StoryblokComponent blok={story?.content} />
 </Layout>
