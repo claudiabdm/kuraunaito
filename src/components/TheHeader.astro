@@ -1,10 +1,11 @@
 ---
+import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
-import { getVersion } from "../utils/functions";
+import { getStoriesLocalizedPath, getVersion } from "../utils/functions";
 import Link from "./Link.astro";
 
 const { path } = Astro.params;
-const { slug, lang, translatedSlug } = Astro.props;
+const { slug } = Astro.props;
 const storyblokApi = useStoryblokApi();
 
 // Get menu links from config file
@@ -16,23 +17,15 @@ const { data } = await storyblokApi.get(`cdn/stories/config`, {
 const {
   data: { stories },
 } = await storyblokApi.get(
-  `cdn/stories?by_uuids_ordered=${data.story.content.headerMenu}&language=${
-    lang ?? "en"
-  }`,
+  `cdn/stories?by_uuids_ordered=${data.story.content.headerMenu}&language=${i18next.language}`,
   {
     version: getVersion(),
   }
 );
 
 // Formatted links
-const links = stories.map((s) => ({
-  slug: s.slug,
-  localizedSlug: s.full_slug,
-  name:
-    s.content.title ||
-    s.translated_slugs.find((ts) => ts.lang === lang)?.name ||
-    s.name,
-}));
+const rootSlug = slug.split("/")[0];
+const links = getStoriesLocalizedPath(stories);
 ---
 
 <header class="header">
@@ -60,14 +53,12 @@ const links = stories.map((s) => ({
 
     <!-- Languages -->
     <section class="nav__group nav__group--lang">
-      <Link href={`/${slug}`} active={lang !== "es"}>en</Link>
+      <Link href={`/${slug}`} active={i18next.language !== "es"}>en</Link>
       <hr class="lang-divider" />
       <Link
-        href={`/es/${translatedSlug?.get("es")?.path}`}
-        active={lang === "es"}
+        href={`/es/${slug.replace(rootSlug, t(rootSlug, { lng: "es" }))}`}
+        active={i18next.language === "es"}>es</Link
       >
-        es
-      </Link>
     </section>
   </nav>
 </header>

@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import storyblok from "@storyblok/astro";
+import astroI18next from "astro-i18next";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -38,5 +39,6 @@ export default defineConfig({
         entriesList: "components/EntriesList",
       },
     }),
+    astroI18next()
   ],
 });

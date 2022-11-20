@@ -8,29 +8,30 @@ const capitalizeTitle = (meta?.title || title || "")
 
 const defaultTitle = capitalizeTitle;
 const defaultDescription = meta?.description || defaultTitle;
+const defaultImage = meta?.image || "";
 const metaTags = [
   { name: "title", content: defaultTitle },
   { name: "description", content: defaultDescription },
   {
     name: "og:image",
-    content: meta?.og_image,
+    content: defaultImage,
   },
-  { name: "og:title", content: meta?.og_title || defaultTitle },
+  { name: "og:title", content: title || defaultTitle },
   {
     name: "og:description",
-    content: meta?.og_description || defaultDescription,
+    content: defaultDescription,
   },
   {
     name: "twitter:image",
-    content: meta?.twitter_title || defaultTitle,
+    content: defaultTitle,
   },
   {
     name: "twitter:title",
-    content: meta?.twitter_title || defaultTitle,
+    content: defaultTitle,
   },
   {
     name: "twitter:descrition",
-    content: meta?.twitter_description || defaultDescription,
+    content: defaultDescription,
   },
 ];
 ---

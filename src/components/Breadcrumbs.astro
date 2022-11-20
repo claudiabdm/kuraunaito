@@ -1,11 +1,12 @@
 ---
+import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
-import { getTranslatedName, getVersion } from "../utils/functions";
+import { getStoriesLocalizedPath, getVersion } from "../utils/functions";
 import Link from "./Link.astro";
 
 const storyblokApi = useStoryblokApi();
 const { path } = Astro.params;
-const { slug, lang } = Astro.props;
+const { slug } = Astro.props;
 
 const slugsArray = slug?.split("/");
 const slugs = slugsArray?.map(
@@ -16,14 +17,14 @@ const slugs = slugsArray?.map(
 
 const {
   data: { stories },
-} = await storyblokApi.get(`cdn/stories?by_slugs=${slugs}&language=${lang}`, {
-  version: getVersion(),
-});
+} = await storyblokApi.get(
+  `cdn/stories?by_slugs=${slugs}&language=${i18next.language}`,
+  {
+    version: getVersion(),
+  }
+);
 
-const breadcrumbs = stories.map((s) => ({
-  name: getTranslatedName(s),
-  href: s.full_slug,
-}));
+const breadcrumbs = getStoriesLocalizedPath(stories);
 ---
 
 {
@@ -33,8 +34,8 @@ const breadcrumbs = stories.map((s) => ({
         {breadcrumbs.map((b, i) => (
           <li class="breadcrumb__item">
             <Link
-              href={`/${b.href}`}
-              active={i > 0 && b.href.includes(path)}
+              href={`/${b.localizedSlug}`}
+              active={i > 0 && b.localizedSlug.includes(path)}
               first={i === 0 && breadcrumbs.length === 1}
             >
               {b.name}

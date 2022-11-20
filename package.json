@@ -16,6 +16,7 @@
     "@fontsource/roboto-slab": "^4.5.9",
     "@storyblok/astro": "^1.1.1",
     "astro": "^1.6.0",
+    "astro-i18next": "^1.0.0-beta.13",
     "axios": "^0.27.2",
     "dotenv": "^16.0.3"
   },

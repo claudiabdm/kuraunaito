@@ -3,11 +3,6 @@ export interface SbLink {
   name: string;
   is_startpage: boolean;
   is_folder: boolean;
-  alternates: {
-    path: string;
-    name: string;
-    lang: "en" | "es";
-  }[];
 }
 
 export interface Path {
@@ -18,7 +13,6 @@ export interface Path {
     slug: string;
     lang: string;
     title: string;
-    translatedSlug?: Map<string, { path: string; name: string }>; // K is language code
   };
 }
 

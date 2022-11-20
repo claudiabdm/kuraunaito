@@ -1,4 +1,6 @@
 ---
+import { getSize } from "../utils/functions";
+
 const {
   blok,
   autoSize = true,
@@ -15,6 +17,8 @@ const srcset = {
   png: createSrcset(blok.filename, "filters:format(png)", sizeList),
   webp: createSrcset(blok.filename, "filters:format(webp)", sizeList),
 };
+
+const size = getSize(blok.filename);
 
 function createSrcset(
   image: string,
@@ -70,8 +74,8 @@ function createSrc(image: string, imageOptions: string): string {
             aspectRatio,
           }}
           alt={blok.alt ?? ""}
-          width={blok.width}
-          height={blok.height}
+          width={size.width}
+          height={size.height}
           src={src}
           loading={preload ? "eager" : "lazy"}
         />

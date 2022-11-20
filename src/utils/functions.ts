@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
 import type { Path, SbLink } from "./types";
 
@@ -14,42 +15,28 @@ export async function generatePathsFromStories() {
   // Format links to astro static paths
   return Object.values(dataLinks).reduce((links, link) => {
     if (!link.is_startpage && link.slug !== "config") {
-      const translatedSlug = link.alternates.reduce((acc, alt) => {
-        acc.set(alt.lang, {
-          ...alt,
-          path: `${alt.path}${link.is_folder ? "/" : ""}`,
-        });
-        return acc;
-      }, new Map());
-      // default route without locale in url
+      const root = link.slug.split("/")[0];
       links.push({
         params: {
           path: link.slug,
         },
         props: {
           slug: `${link.slug}${link.is_folder ? "/" : ""}`,
-          lang: "en",
           title: link.name,
-          translatedSlug,
+          lang: "en",
         },
       });
-
-      // localized routes
-      for (const alt of link.alternates) {
-        links.push({
-          params: {
-            path: `${alt.lang}/${alt.path}`,
-          },
-          props: {
-            slug: `${link.slug}${link.is_folder ? "/" : ""}`,
-            lang: alt.lang,
-            title: alt.name || link.name,
-            translatedSlug,
-          },
-        });
-      }
+      links.push({
+        params: {
+          path: `es/${link.slug.replace(root, t(root, { lng: "es" }))}`,
+        },
+        props: {
+          slug: `${link.slug}${link.is_folder ? "/" : ""}`,
+          title: t(link.name, { lng: "es" }),
+          lang: "es",
+        },
+      });
     }
-
     return links;
   }, [] as Path[]);
 }
@@ -60,11 +47,16 @@ export function getVersion() {
     : "published";
 }
 
-export function getTranslatedName(story) {
-  const translatedSlug = story?.translated_slugs?.find(
-    (s) => s.lang === story.lang
-  );
-  return translatedSlug?.name || story.name;
+export function getStoriesLocalizedPath(stories: any[]) {
+  return stories.map((s) => getStoryLocalizedPath(s));
+}
+
+export function getStoryLocalizedPath(story: any) {
+  const rootSlug = story.full_slug.replace("es/", "").split("/")[0];
+  return {
+    localizedSlug: story.full_slug.replace(rootSlug, t(rootSlug)),
+    name: t(story.name.toLowerCase() || story.slug),
+  };
 }
 
 export function getYear(year?: number) {

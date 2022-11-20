@@ -1,4 +1,5 @@
 ---
+import i18next, { t } from 'i18next';
 import { useStoryblokApi } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import { generatePathsFromStories, getVersion } from "../utils/functions";
@@ -7,10 +8,13 @@ import Layout from "../layouts/Layout.astro";
 export async function getStaticPaths() {
   return generatePathsFromStories();
 }
-const { lang, title, slug, translatedSlug } = Astro.props;
+const { title, slug, lang } = Astro.props;
 const storyblokApi = useStoryblokApi();
+
+i18next.changeLanguage(lang);
+
 const { data } = await storyblokApi.get(
-  `cdn/stories/${slug}?language=${lang}`,
+  `cdn/stories/${slug}?language=${i18next.language}`,
   {
     version: getVersion(),
   }
@@ -18,6 +22,6 @@ const { data } = await storyblokApi.get(
 const story = data?.story;
 ---
 
-<Layout {...{ title, slug, lang, translatedSlug, seo: story.content.seo }}>
+<Layout {...{ title, slug, seo: story.content.seo }}>
   <StoryblokComponent {...Astro.props} blok={story?.content} />
 </Layout>

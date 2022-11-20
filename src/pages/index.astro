@@ -1,15 +1,17 @@
 ---
+import i18next from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import Layout from "../layouts/Layout.astro";
 import { getVersion } from "../utils/functions";
 import type { Path } from "../utils/types";
 
+i18next.changeLanguage("en");
+
 const props: Path["props"] = {
   title: "Marina Sastre",
   lang: "en",
   slug: "home",
-  translatedSlug: new Map([["es", { path: "home", name: "Marina Sastre" }]]),
 };
 const storyblokApi = useStoryblokApi();
 const { data } = await storyblokApi.get(`cdn/stories/home`, {

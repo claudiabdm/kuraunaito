@@ -1,19 +1,20 @@
 ---
+import i18next from "i18next";
 import "@fontsource/roboto-slab";
 import "../styles/global.css";
 import TheHeader from "../components/TheHeader.astro";
 import Meta from "../components/Meta.astro";
 
-const { title, slug, lang, translatedSlug, seo } = Astro.props;
+const { title, slug, seo } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang={lang}>
+<html lang={i18next.language}>
   <head>
     <Meta seo={seo} title={title} />
   </head>
   <body class="body">
-    <TheHeader {...{slug, lang, translatedSlug}} />
+    <TheHeader slug={slug} />
     <main class="main">
       <slot />
     </main>
