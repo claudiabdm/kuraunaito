@@ -5,10 +5,11 @@ const capitalizeTitle = (meta?.title || title || "")
   .split(" ")
   .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1))
   .join(" ");
-
+console.log(meta)
 const defaultTitle = capitalizeTitle;
 const defaultDescription = meta?.description || defaultTitle;
 const defaultImage = meta?.image || "";
+const defaultAlt = meta?.alt || defaultTitle;
 const metaTags = [
   { name: "title", content: defaultTitle },
   { name: "description", content: defaultDescription },
@@ -16,18 +17,26 @@ const metaTags = [
     name: "og:image",
     content: defaultImage,
   },
-  { name: "og:title", content: title || defaultTitle },
+  {
+    name: "og:image:alt",
+    content: defaultAlt,
+  },
+  { name: "og:title", content: defaultTitle },
   {
     name: "og:description",
     content: defaultDescription,
   },
   {
     name: "twitter:image",
-    content: defaultTitle,
+    content: defaultImage,
   },
   {
     name: "twitter:title",
     content: defaultTitle,
+  },
+  {
+    name: "twitter:image:alt",
+    content: defaultAlt,
   },
   {
     name: "twitter:descrition",
