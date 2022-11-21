@@ -5,7 +5,6 @@ const capitalizeTitle = (meta?.title || title || "")
   .split(" ")
   .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1))
   .join(" ");
-console.log(meta)
 const defaultTitle = capitalizeTitle;
 const defaultDescription = meta?.description || defaultTitle;
 const defaultImage = meta?.image || "";
@@ -14,16 +13,16 @@ const metaTags = [
   { name: "title", content: defaultTitle },
   { name: "description", content: defaultDescription },
   {
-    name: "og:image",
+    property: "og:image",
     content: defaultImage,
   },
   {
-    name: "og:image:alt",
+    property: "og:image:alt",
     content: defaultAlt,
   },
-  { name: "og:title", content: defaultTitle },
+  { property: "og:title", content: defaultTitle },
   {
-    name: "og:description",
+    property: "og:description",
     content: defaultDescription,
   },
   {
@@ -51,11 +50,8 @@ const metaTags = [
   <meta name="generator" content={Astro.generator} />
   <title>{capitalizeTitle}</title>
   {
-    metaTags.map(({ name, content }) => {
-      if (name.includes("og")) {
-        return <meta property={name} content={content} />;
-      }
-      return <meta name={name} content={content} />;
+    metaTags.map((meta) => {
+      return <meta {...meta} />;
     })
   }
 </>
