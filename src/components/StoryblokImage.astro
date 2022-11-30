@@ -4,12 +4,13 @@ import { getSize } from "../utils/functions";
 const {
   blok,
   autoSize = true,
-  imageClass,
-  sizeList = [400, 640, 768, 1280, 2048],
-  breakpoints = [320, 400, 640, 768, 1280, 2048],
+  style,
+  sizeList = [400, 640, 768],
+  breakpoints = [320, 400, 640, 768],
   preload = false,
   formats = ["webp", "avif", "png"],
   aspectRatio = "auto",
+  index = 0,
 } = Astro.props;
 
 const src = createSrc(blok.filename, "1280x0/smart");
@@ -69,8 +70,9 @@ function createSrc(image: string, imageOptions: string): string {
           </>
         ))}
         <img
-          class:list={["image", { "image--auto-size": autoSize }, imageClass]}
+          class:list={["image", { "image--auto-size": autoSize }]}
           style={{
+            ...style,
             aspectRatio,
           }}
           alt={blok.alt ?? ""}
@@ -78,6 +80,7 @@ function createSrc(image: string, imageOptions: string): string {
           height={size.height}
           src={src}
           loading={preload ? "eager" : "lazy"}
+          data-index={index}
         />
       </>
     )

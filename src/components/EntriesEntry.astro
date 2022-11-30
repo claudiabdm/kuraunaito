@@ -1,6 +1,7 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
 import Breadcrumbs from "./Breadcrumbs.astro";
+import Carousel from "./Carousel.astro";
 
 import StoryblokImage from "./StoryblokImage.astro";
 
@@ -9,38 +10,53 @@ const { blok } = Astro.props;
 
 <div class="entry">
   <Breadcrumbs {...Astro.props} />
-  <ul class="entryList" {...storyblokEditable(blok)}>
+  <ul class="entry__entries" {...storyblokEditable(blok)} id="entryEntries">
     {
       blok.entries?.map((e, i) => {
         return (
-          <li class="entryList__elem" tabindex="0">
-            <StoryblokImage blok={e} preload={i < 3} />
+          <li class="entry__elem" tabindex="0" >
+            <StoryblokImage
+              blok={e}
+              preload={i < 3}
+              style={{
+                maxHeight: "var(--maxHeight)",
+              }}
+              index={i}
+            />
           </li>
         );
       })
     }
   </ul>
+  <Carousel images={blok.entries} />
 </div>
 
-<style lang="scss">
+<style lang="scss" define:vars={{ maxHeight: "620px" }} is:global>
   .entry {
     display: grid;
     gap: var(--space-s-m);
     padding-bottom: var(--space-s-m);
-  }
-  .entryList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs-s);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    &__entries {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-m);
+      margin: 0;
+      padding: 0;
+      list-style: none;
 
-    @media screen and (min-width: 732px) {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      justify-items: center;
-      align-items: center;
+      @media screen and (min-width: 732px) {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-auto-rows: var(--maxHeight);
+        gap: var(--space-xl);
+        align-items: center;
+      }
+    }
+
+    &__elem {
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 </style>

@@ -1,0 +1,203 @@
+---
+import StoryblokImage from "./StoryblokImage.astro";
+
+const { images } = Astro.props;
+---
+
+<script is:inline type="module">
+  import { Carousel } from "/scripts/carousel.js";
+  const entryEntries = document.getElementById("entryEntries");
+
+  entryEntries.addEventListener("click", handleOpen);
+
+  const carouselElement = document.getElementById("carousel");
+  const carousel = new Carousel(carouselElement);
+
+  function handleOpen(e) {
+    if (e.target.tagName === "IMG") {
+      e.preventDefault();
+      const imgIndex = e.target.dataset.index;
+      carousel.open(imgIndex);
+    }
+  }
+</script>
+
+<div id="carousel-dialog" aria-hidden="true" class="carousel">
+  <div class="carousel__overlay" data-a11y-dialog-hide></div>
+  <div id="carousel" role="document">
+    <button
+      type="button"
+      id="closeButton"
+      class="carousel__button carousel__close"
+      aria-label="Close carousel"
+    >
+      <svg
+        class="carousel__svg"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <div id="carousel__wrapper" class="carousel__wrapper">
+      <div class="carousel__main">
+        <!-- Prev Link -->
+        <a
+          class="carousel__button"
+          aria-label="Go to previous photo"
+          id="prevLink"
+        >
+          <svg
+            class="carousel__svg"
+            id="prev"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </a>
+
+        <!-- Slides -->
+        <ul id="slides" class="carousel__slides">
+          {
+            images.map((img, i) => (
+              <li class:list={["carousel__slide", "carousel__slide--main"]}>
+                <StoryblokImage
+                  blok={img}
+                  sizeList={[2048]}
+                  aspectRatio="1/1"
+                  style={{
+                    height: "auto",
+                    objectFit: "contain",
+                  }}
+                  autoSize={false}
+                />
+              </li>
+            ))
+          }
+        </ul>
+
+        <!-- Next Link -->
+        <a class="carousel__button" aria-label="Go to next photo" id="nextLink">
+          <svg
+            class="carousel__svg"
+            id="next"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style lang="scss" is:global>
+  .carousel {
+    display: unset;
+    background-color: rgba(250, 250, 250, 0.5);
+    backdrop-filter: blur(10px);
+
+    &[aria-hidden="true"] {
+      display: none;
+    }
+
+    &,
+    &__overlay {
+      position: fixed;
+      inset: 0;
+      user-select: none;
+      z-index: 1;
+    }
+
+    &--active {
+      display: unset;
+    }
+
+    &__close {
+      position: absolute;
+      right: 0;
+    }
+
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    &__main {
+      display: grid;
+      grid-template-columns: 0.25fr minmax(0, 90vh) 0.25fr;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    &__slides {
+      padding: 0;
+      margin: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__slide {
+      list-style: none;
+      user-select: none;
+      pointer-events: none;
+
+      &--main {
+        position: absolute;
+        display: flex;
+        visibility: visible;
+        opacity: 0;
+        transition: opacity 0.25s linear;
+      }
+      &--visible {
+        position: relative;
+        visibility: visible;
+        opacity: 1;
+        z-index: 1;
+      }
+    }
+
+    &__button {
+      width: 48px;
+      height: 48px;
+      border: none;
+      background: none;
+      margin: 1rem;
+      padding: 0;
+      color: var(--tertiary);
+      z-index: 2;
+      &:hover {
+        cursor: pointer;
+        color: var(--secondary);
+      }
+      &:focus-visible {
+        outline: dashed 2px var(--primary);
+      }
+    }
+    &__svg {
+      width: 48px;
+      height: 48px;
+    }
+  }
+</style>
