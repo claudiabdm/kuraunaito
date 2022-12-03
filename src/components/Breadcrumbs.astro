@@ -6,7 +6,7 @@ import Link from "./Link.astro";
 
 const storyblokApi = useStoryblokApi();
 const { path } = Astro.params;
-const { slug } = Astro.props;
+const { slug = 'home' } = Astro.props;
 
 const slugsArray = slug?.split("/");
 const slugs = slugsArray?.map(

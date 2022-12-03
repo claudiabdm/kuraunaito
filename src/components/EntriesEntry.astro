@@ -14,12 +14,12 @@ const { blok } = Astro.props;
     {
       blok.entries?.map((e, i) => {
         return (
-          <li class="entry__elem" tabindex="0" >
+          <li class="entry__elem" tabindex="0">
             <StoryblokImage
               blok={e}
               preload={i < 3}
               style={{
-                maxHeight: "var(--maxHeight)",
+                maxHeight: "var(--max-height)",
               }}
               index={i}
             />
@@ -31,7 +31,7 @@ const { blok } = Astro.props;
   <Carousel images={blok.entries} />
 </div>
 
-<style lang="scss" define:vars={{ maxHeight: "620px" }} is:global>
+<style lang="scss" is:global>
   .entry {
     display: grid;
     gap: var(--space-s-m);
@@ -47,7 +47,7 @@ const { blok } = Astro.props;
       @media screen and (min-width: 732px) {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        grid-auto-rows: var(--maxHeight);
+        grid-auto-rows: var(--max-height);
         gap: var(--space-xl);
         align-items: center;
       }

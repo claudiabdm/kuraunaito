@@ -49,6 +49,9 @@ Variables
   --primary: #1e1e1e;
   --secondary: #767676;
   --tertiary: #333;
+
+  /**/
+  --max-height: 620px;
 }
 
 /* 
@@ -141,7 +144,9 @@ select {
 Fonts
 */
 body {
-  font-family: "Roboto Slab", serif;
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka,
+    メイリオ, Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", "ＭＳ ゴシック",
+    "MS Gothic", "Noto Sans CJK JP", TakaoPGothic, sans-serif;
 }
 
 h1 {
@@ -157,4 +162,16 @@ h4,
 h5,
 h6 {
   font-size: var(--step-0);
+}
+
+/*
+Show scrollbar always
+*/
+*::-webkit-scrollbar {
+  appearance: none;
+  width: 7px;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: var(--secondary);
 }

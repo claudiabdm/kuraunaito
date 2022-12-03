@@ -59,8 +59,10 @@ export function getStoryLocalizedPath(story: any) {
   };
 }
 
-export function getYear(year?: number) {
-  return year || new Date().getFullYear();
+export function getDate(date?: string) {
+  return date
+    ? new Date(date).toLocaleDateString()
+    : new Date().toLocaleDateString();
 }
 
 export function getSize(filename?: string): { width: number; height: number } {

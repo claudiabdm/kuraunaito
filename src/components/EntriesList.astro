@@ -2,14 +2,14 @@
 import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
 import { getStoryLocalizedPath, getVersion } from "../utils/functions";
-import { getYear } from "../utils/functions";
+import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
 import StoryblokImage from "./StoryblokImage.astro";
 
 const storyblokApi = useStoryblokApi();
 
-const { slug, blok } = Astro.props;
+const { slug = "home", blok } = Astro.props;
 
 const {
   data: { stories },
@@ -68,7 +68,7 @@ const defaultImage = blok.defaultImage.filename
               />
             </svg>
             <Link href={`/${s.localizedSlug}`} className="linkList__link">
-              {s.name} - {getYear(s.content.year)}
+              {s.name} - {getDate(s.content.date)}
             </Link>
           </li>
         ))
@@ -87,8 +87,9 @@ const defaultImage = blok.defaultImage.filename
   .container {
     @media screen and (min-width: 732px) {
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 0.75fr 1fr;
       justify-items: flex-end;
+      gap: var(--space-3xl);
     }
 
     &__nav {
@@ -109,6 +110,14 @@ const defaultImage = blok.defaultImage.filename
     margin: 0;
     padding: 0;
     list-style: none;
+
+    @media screen and (min-width: 732px) {
+      height: var(--max-height);
+      overflow: hidden;
+      &:hover {
+        overflow: auto;
+      }
+    }
 
     &__elem {
       display: grid;
