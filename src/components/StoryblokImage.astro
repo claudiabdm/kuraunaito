@@ -5,8 +5,8 @@ const {
   blok,
   autoSize = true,
   style,
-  sizeList = [400, 640, 768, 2048],
-  breakpoints = [320, 400, 640, 768, 1024],
+  sizeList = [640, 768, 1024],
+  breakpoints = [400, 640, 768, 1024],
   preload = false,
   formats = ["webp", "avif", "png"],
   aspectRatio = "auto",
@@ -112,12 +112,8 @@ function createSrc(image: string, imageOptions: string): string {
     &--auto-size {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       object-position: center;
-      @media screen and (min-width: 732px) {
-        object-position: right;
-
-      }
     }
   }
 

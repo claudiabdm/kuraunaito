@@ -3,7 +3,6 @@ import A11yDialog from 'https://cdn.jsdelivr.net/npm/a11y-dialog@^7.5.2/dist/a11
 export { Carousel };
 
 function Carousel(carouselElem) {
-  debugger;
   this.dialog = new A11yDialog(document.getElementById("carousel-dialog"));
   this.carouselElem = carouselElem;
   this.slidesUl = carouselElem.querySelector("#slides");
@@ -34,7 +33,6 @@ Carousel.prototype.open = function (index = undefined) {
   this.dialog.show();
   this.isOpen = true;
   updateCarouselUrl(index);
-  debugger;
 };
 
 Carousel.prototype.close = function () {
@@ -82,7 +80,8 @@ function addEvents() {
   this.nextLink.addEventListener("click", goToNext(this));
   this.closeButton.addEventListener("click", closeCarousel(this));
 
-  this.dialog.on("hide", () => {
+  this.dialog.on("hide", (e) => {
+    debugger;
     this.close();
   });
 
@@ -123,7 +122,7 @@ function addEvents() {
   function goToNext(carousel) {
     return function handleNext(e) {
       e.preventDefault();
-      const index = getPrevIndex(
+      const index = getNextIndex(
         carousel.currentIdx,
         carousel.slidesUl.childElementCount
       );
