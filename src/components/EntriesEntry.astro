@@ -1,37 +1,66 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
+import Carousel from "astro-carousel";
 import Breadcrumbs from "./Breadcrumbs.astro";
-import Carousel from "./Carousel.astro";
-
 import StoryblokImage from "./StoryblokImage.astro";
 
 const { blok } = Astro.props;
+const { path } = Astro.params;
 ---
 
 <div class="entry">
   <Breadcrumbs {...Astro.props} />
-  <ul class="entry__entries" {...storyblokEditable(blok)} id="entryEntries">
+  <ul
+    class="entry__entries"
+    {...storyblokEditable(blok)}
+    id="carouselTargetList"
+  >
     {
       blok.entries?.map((e, i) => {
         return (
-          <li class="entry__elem" tabindex="0">
-            <StoryblokImage
-              blok={e}
-              preload={i < 3}
-              style={{
-                maxHeight: "var(--max-height)",
-              }}
-              index={i}
-            />
+          <li class="entry__elem">
+            <a
+              href={`/${path}?image=${i}`}
+              data-carousel-index={i}
+              class="entry__link"
+            >
+              <StoryblokImage
+                blok={e}
+                preload={i < 3}
+                style={{
+                  maxHeight: "var(--maxHeight)",
+                }}
+                data={{ 'data-carousel-index': i }}
+              />
+            </a>
           </li>
         );
       })
     }
   </ul>
-  <Carousel images={blok.entries} />
+  <Carousel>
+    <ul id="slides" class="carousel__slides">
+      {
+        blok.entries.map((img: any) => (
+          <li class:list={["carousel__slide"]}>
+            <StoryblokImage
+              blok={img}
+              sizeList={[2048]}
+              aspectRatio="1/1"
+              style={{
+                height: "auto",
+              }}
+              autoSize={false}
+              preload={true}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Carousel>
 </div>
 
-<style lang="scss" is:global>
+<style lang="scss" define:vars={{ maxHeight: "620px" }} is:global>
   .entry {
     display: grid;
     gap: var(--space-s-m);
@@ -47,7 +76,7 @@ const { blok } = Astro.props;
       @media screen and (min-width: 732px) {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        grid-auto-rows: var(--max-height);
+        grid-auto-rows: var(--maxHeight);
         gap: var(--space-xl);
         align-items: center;
       }
@@ -57,6 +86,10 @@ const { blok } = Astro.props;
       &:hover {
         cursor: pointer;
       }
+    }
+
+    &__link {
+      display: block;
     }
   }
 </style>

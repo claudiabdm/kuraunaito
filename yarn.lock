@@ -717,6 +717,11 @@ ast-types@0.14.2:
   dependencies:
     tslib "^2.0.1"
 
+astro-carousel@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/astro-carousel/-/astro-carousel-1.0.1.tgz#510e2b67fd95ad48e50e27640484ffaa41ee57c8"
+  integrity sha512-Uf9ujgsk4s2RqBekWXKv9oiGuUsq9cVrJy+GUDEieuBYEwut7+9mVava5mz8WvSNHszOasisSef5CAPpge8NMA==
+
 astro-i18next@^1.0.0-beta.13:
   version "1.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/astro-i18next/-/astro-i18next-1.0.0-beta.13.tgz#066e4bf4b498347075473cc1db31842578678241"
