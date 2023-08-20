@@ -9,12 +9,12 @@ import StoryblokImage from "./StoryblokImage.astro";
 
 const storyblokApi = useStoryblokApi();
 
-const { slug = "home", blok } = Astro.props;
+const { slug = "home", blok, lang } = Astro.props;
 
 const {
   data: { stories },
 } = await storyblokApi.get(
-  `cdn/stories?starts_with=${slug}&sort_by=published_at:asc&language=${i18next.language}`,
+  `cdn/stories?starts_with=${slug}&language=${i18next.language}`,
   {
     version: getVersion(),
   }
@@ -67,8 +67,11 @@ const defaultImage = blok.defaultImage.filename
                 y2={i < storiesInRoot.length - 1 ? 50 : 25}
               />
             </svg>
-            <Link href={`/${s.localizedSlug}`} className="linkList__link">
-              {s.name} - {getDate(s.content.date)}
+            <Link href={`/${s.localizedSlug}`} class="linkList__link">
+              {s.name}
+              <div class="linkList__date">
+                {getDate(s.content.from, s.content.to, lang)}
+              </div>
             </Link>
           </li>
         ))
@@ -78,7 +81,7 @@ const defaultImage = blok.defaultImage.filename
 
   {
     defaultImage && (
-      <StoryblokImage aspectRatio="1/1" blok={defaultImage} preload={true} />
+      <StoryblokImage aspectRatio="4/5" blok={defaultImage} preload={true} />
     )
   }
 </div>
@@ -102,7 +105,7 @@ const defaultImage = blok.defaultImage.filename
       height: auto;
       aspect-ratio: 1/1;
       object-fit: cover;
-      object-position: right;
+      object-position: center;
     }
   }
 
@@ -130,6 +133,11 @@ const defaultImage = blok.defaultImage.filename
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+    }
+
+    &__date {
+      font-size: 0.75rem;
+      color: var(--secondary);
     }
   }
 </style>

@@ -59,10 +59,21 @@ export function getStoryLocalizedPath(story: any) {
   };
 }
 
-export function getDate(date?: string) {
-  return date
-    ? new Date(date).toLocaleDateString()
-    : new Date().toLocaleDateString();
+export function getDate(fromDate?: string, toDate?: string, lang?: string) {
+
+  const from = formatDate(fromDate);
+  const to = formatDate(toDate);
+  const dateField = from == to ? from : `${from} - ${to}`;
+
+  function formatDate(date: string) {
+    const dtFormat = new Intl.DateTimeFormat(lang, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    return date ? dtFormat.format(new Date(date)) : dtFormat.format(new Date());
+  }
+  return dateField;
 }
 
 export function getSize(filename?: string): { width: number; height: number } {
