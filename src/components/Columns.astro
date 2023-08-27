@@ -1,0 +1,34 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { blok } = Astro.props;
+---
+
+<div {...storyblokEditable(blok)} class="column">
+  {
+    blok.blocks?.map((blok) => (
+      <StoryblokComponent {...Astro.props} blok={blok} />
+    ))
+  }
+</div>
+
+<style
+  lang="scss"
+  define:vars={{
+    numOfCols: blok.numOfCols,
+    gridTemplateCols: blok.gridTemplateCols,
+  }}
+>
+  .column {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+
+    @media screen and (min-width: 732px) {
+      grid-template-columns: var(
+        --gridTemplateCols,
+        repeat(var(--numOfCols), 1fr)
+      );
+    }
+  }
+</style>

@@ -37,6 +37,9 @@ export default defineConfig({
         entriesListLatest: "components/EntriesListLatest",
         entriesEntry: "components/EntriesEntry",
         entriesList: "components/EntriesList",
+        columns: "components/Columns",
+        rows: "components/Rows",
+        spline: "components/Spline",
       },
     }),
     astroI18next()

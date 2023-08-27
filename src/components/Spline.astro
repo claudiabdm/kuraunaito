@@ -1,0 +1,10 @@
+---
+const { blok } = Astro.props;
+---
+
+<script
+  type="module"
+  src="https://unpkg.com/@splinetool/viewer@0.9.428/build/spline-viewer.js"
+></script>
+
+<spline-viewer url={blok.url} />
