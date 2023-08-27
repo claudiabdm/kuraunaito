@@ -12,8 +12,41 @@ export async function generatePathsFromStories() {
     version: getVersion(),
   })) as { data: { links: SbLink[] } };
 
+  const home: Path[] = [
+    {
+      params: {
+        path: "/",
+      },
+      props: {
+        slug: "home",
+        title: t("home", { lng: "en" }),
+        lang: "en",
+      },
+    },
+    {
+      params: {
+        path: "en",
+      },
+      props: {
+        slug: "home",
+        title: t("home", { lng: "en" }),
+        lang: "en",
+      },
+    },
+    {
+      params: {
+        path: "es",
+      },
+      props: {
+        slug: "home",
+        title: t("home", { lng: "es" }),
+        lang: "es",
+      },
+    },
+  ];
+
   // Format links to astro static paths
-  return Object.values(dataLinks).reduce((links, link) => {
+  const links = Object.values(dataLinks).reduce((links, link) => {
     if (!link.is_startpage && link.slug !== "config") {
       const root = link.slug.split("/")[0];
       links.push({
@@ -39,6 +72,10 @@ export async function generatePathsFromStories() {
     }
     return links;
   }, [] as Path[]);
+
+  links.push(...home);
+
+  return links;
 }
 
 export function getVersion() {
@@ -60,7 +97,6 @@ export function getStoryLocalizedPath(story: any) {
 }
 
 export function getDate(fromDate?: string, toDate?: string, lang?: string) {
-
   const from = formatDate(fromDate);
   const to = formatDate(toDate);
   const dateField = from == to ? from : `${from} - ${to}`;
