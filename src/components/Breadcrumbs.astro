@@ -1,12 +1,12 @@
 ---
-import i18next, { t } from "i18next";
+import i18next from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
 import { getStoriesLocalizedPath, getVersion } from "../utils/functions";
 import Link from "./Link.astro";
 
 const storyblokApi = useStoryblokApi();
 const { path } = Astro.params;
-const { slug = 'home' } = Astro.props;
+const { slug } = Astro.props;
 
 const slugsArray = slug?.split("/");
 const slugs = slugsArray?.map(
