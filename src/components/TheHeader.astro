@@ -1,11 +1,13 @@
 ---
-import i18next from "i18next";
+import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
 import { getStoriesLocalizedPath, getVersion } from "../utils/functions";
 import Link from "./Link.astro";
 
 const { path } = Astro.params;
+const { slug } = Astro.props;
 
+const slugFormatted = slug === "home" ? "" : slug;
 const storyblokApi = useStoryblokApi();
 
 // Get menu links from config file
@@ -24,6 +26,7 @@ const {
 );
 
 // Formatted links
+const rootSlug = slugFormatted.split("/")[0];
 const links = getStoriesLocalizedPath(stories);
 ---
 
@@ -54,9 +57,17 @@ const links = getStoriesLocalizedPath(stories);
 
     <!-- Languages -->
     <section class="nav__group nav__group--lang" translate="no">
-      <Link href="/" active={i18next.language !== "es"}>en</Link>
+      <Link href={`/${slugFormatted}`} active={i18next.language !== "es"}
+        >en</Link
+      >
       <hr class="lang-divider" />
-      <Link href="es" active={i18next.language === "es"}>es</Link>
+      <Link
+        href={`/es/${slugFormatted.replace(
+          rootSlug,
+          t(rootSlug, { lng: "es" })
+        )}`}
+        active={i18next.language === "es"}>es</Link
+      >
     </section>
   </nav>
 </header>
