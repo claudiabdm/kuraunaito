@@ -9,10 +9,10 @@ const { href, active, first, className } = Astro.props;
 <style lang="scss">
   .link {
     text-decoration: none;
-    &.active:not(.first) {
+    &.active {
       color: var(--secondary);
     }
-    &:hover:not(.first) {
+    &:hover {
       text-decoration: underline;
     }
   }
