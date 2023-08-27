@@ -41,7 +41,7 @@ const { path } = Astro.params;
   <Carousel>
     <ul id="slides" class="carousel__slides">
       {
-        blok.entries.map((img: any) => (
+        blok.entries?.map((img: any) => (
           <li class:list={["carousel__slide"]}>
             <StoryblokImage
               blok={img}
