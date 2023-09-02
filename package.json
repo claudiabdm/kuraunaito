@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^1.0.0",
-    "@fontsource/roboto": "^4.5.9",
+    "@fontsource/roboto": "^5.0.8",
     "@storyblok/astro": "^1.1.1",
     "astro": "^1.6.0",
     "astro-carousel": "^1.0.1",
