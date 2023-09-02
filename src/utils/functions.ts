@@ -15,7 +15,7 @@ export async function generatePathsFromStories() {
   const home: Path[] = [
     {
       params: {
-        path: "/",
+        path: undefined,
       },
       props: {
         slug: "home",
@@ -56,6 +56,16 @@ export async function generatePathsFromStories() {
         props: {
           slug: `${link.slug}${link.is_folder ? "/" : ""}`,
           title: link.name,
+          lang: "en",
+        },
+      });
+      links.push({
+        params: {
+          path: `en/${link.slug.replace(root, t(root, { lng: "en" }))}`,
+        },
+        props: {
+          slug: `${link.slug}${link.is_folder ? "/" : ""}`,
+          title: t(link.name, { lng: "en" }),
           lang: "en",
         },
       });
