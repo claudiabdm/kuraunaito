@@ -24,7 +24,7 @@ const {
 
 // Display stories and folders that are in current folder
 const root = stories.find((s) => slug.includes(s.slug));
-const level = root.full_slug.split("/").length - 1;
+const level = root?.full_slug.split("/").length - 1;
 const storiesInRoot = stories
   .filter((story) => {
     if (
@@ -57,7 +57,7 @@ if (withLimit) {
 
 const defaultImage = blok.defaultImage.filename
   ? blok.defaultImage
-  : storiesInRoot[0].content.entries?.[0];
+  : storiesInRoot[0]?.content.entries?.[0];
 ---
 
 <div class:list={["container", { "container--cols": Boolean(defaultImage) }]}>
