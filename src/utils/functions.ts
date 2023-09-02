@@ -4,12 +4,13 @@ import type { Path, SbLink } from "./types";
 
 export async function generatePathsFromStories() {
   const storyblokApi = useStoryblokApi();
+  const version = getVersion();
 
   // Retrieves all links from storyblok
   const {
     data: { links: dataLinks },
   } = (await storyblokApi.get("cdn/links", {
-    version: getVersion(),
+    version, // TODO check: this is not working as expected as is retriving all links
   })) as { data: { links: SbLink[] } };
 
   const home: Path[] = [
@@ -47,6 +48,9 @@ export async function generatePathsFromStories() {
 
   // Format links to astro static paths
   const links = Object.values(dataLinks).reduce((links, link) => {
+    if (link.published === false && version === "published") {
+      return links;
+    }
     if (!link.is_startpage && link.slug !== "config") {
       const root = link.slug.split("/")[0];
       links.push({

@@ -3,6 +3,7 @@ export interface SbLink {
   name: string;
   is_startpage: boolean;
   is_folder: boolean;
+  published: boolean;
 }
 
 export interface Path {
