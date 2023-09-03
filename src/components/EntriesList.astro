@@ -57,7 +57,7 @@ if (withLimit) {
 
 const defaultImage = blok.defaultImage.filename
   ? blok.defaultImage
-  : storiesInRoot[0]?.content.entries?.[0];
+  : null;
 ---
 
 <div class:list={["container", { "container--cols": Boolean(defaultImage) }]}>
