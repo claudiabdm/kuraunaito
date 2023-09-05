@@ -12,10 +12,11 @@
     "https-dev": "astro dev & local-ssl-proxy --source 3010 --target 3000 --cert localhost.pem --key localhost-key.pem"
   },
   "dependencies": {
+    "@astrojs/netlify": "^3.0.1",
     "@astrojs/sitemap": "^1.0.0",
     "@fontsource/roboto": "^5.0.8",
     "@storyblok/astro": "^1.1.1",
-    "astro": "^1.6.0",
+    "astro": "^3.0.7",
     "astro-carousel": "^1.0.1",
     "astro-i18next": "^1.0.0-beta.13",
     "axios": "^0.27.2",
