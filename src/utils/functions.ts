@@ -93,7 +93,7 @@ export async function generatePathsFromStories() {
 }
 
 export function getVersion() {
-  return import.meta.env.STORYBLOK_PREVIEW_ENABLED === "true"
+  return import.meta.env.STORYBLOK_PREVIEW_ENABLED === true
     ? "draft"
     : "published";
 }
