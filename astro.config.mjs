@@ -1,22 +1,19 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import netlify from "@astrojs/netlify/functions";
 import storyblok from "@storyblok/astro";
 import astroI18next from "astro-i18next";
 import * as dotenv from "dotenv";
 
 dotenv.config();
-const storyblokConfig =
-  process.env.STORYBLOK_PREVIEW_ENABLED === "true"
-    ? {
-        accessToken: process.env.STORYBLOK_PREVIEW,
-        bridge: true,
-      }
-    : {
-        accessToken: process.env.STORYBLOK_PUBLISHED,
-        bridge: false,
-      };
+const storyblokConfig = {
+  accessToken: process.env.STORYBLOK_PREVIEW,
+  bridge: true,
+};
 // https://astro.build/config
 export default defineConfig({
+  output: "server",
+  adapter: netlify(),
   integrations: [
     sitemap({
       i18n: {
@@ -42,6 +39,6 @@ export default defineConfig({
         spline: "components/Spline",
       },
     }),
-    astroI18next()
+    astroI18next(),
   ],
 });

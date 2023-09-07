@@ -9,7 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "https-dev": "astro dev & local-ssl-proxy --source 3010 --target 3000 --cert localhost.pem --key localhost-key.pem"
+    "https-dev": "astro dev & local-ssl-proxy --source 3010 --target 4321 --cert localhost.pem --key localhost-key.pem",
+    "netlify-https-dev": "netlify dev & local-ssl-proxy --source 3010 --target 4321 --cert localhost.pem --key localhost-key.pem"
   },
   "dependencies": {
     "@astrojs/sitemap": "^1.0.0",
