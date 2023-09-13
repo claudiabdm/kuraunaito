@@ -15,7 +15,7 @@
     "@astrojs/netlify": "^3.0.1",
     "@astrojs/sitemap": "^1.0.0",
     "@fontsource/roboto": "^5.0.8",
-    "@storyblok/astro": "^1.1.1",
+    "@storyblok/astro": "^3.0.0",
     "astro": "^3.0.7",
     "astro-carousel": "^1.0.1",
     "astro-i18next": "^1.0.0-beta.13",
