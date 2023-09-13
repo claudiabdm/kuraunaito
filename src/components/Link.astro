@@ -1,8 +1,8 @@
 ---
-const { href, active, first, className } = Astro.props;
+const { href, active, first, ellipsis, class: className } = Astro.props;
 ---
 
-<a href={href} class:list={["link", className, { active, first }]}>
+<a href={href} class:list={["link", className, { ellipsis, active, first }]}>
   <slot />
 </a>
 
@@ -11,6 +11,11 @@ const { href, active, first, className } = Astro.props;
     text-decoration: none;
     &.active {
       color: var(--secondary);
+    }
+    &.ellipsis {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
     &:hover {
       text-decoration: underline;
