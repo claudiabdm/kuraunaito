@@ -17,7 +17,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@storyblok/astro": "^3.0.0",
     "astro": "^3.0.7",
-    "astro-carousel": "^1.0.1",
+    "astro-carousel": "^1.0.2",
     "astro-i18next": "^1.0.0-beta.13",
     "axios": "^0.27.2",
     "dotenv": "^16.0.3"

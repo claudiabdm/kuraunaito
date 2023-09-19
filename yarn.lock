@@ -815,9 +815,9 @@ array-iterate@^2.0.0:
   integrity sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==
 
 astro-carousel@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/astro-carousel/-/astro-carousel-1.0.1.tgz#510e2b67fd95ad48e50e27640484ffaa41ee57c8"
-  integrity sha512-Uf9ujgsk4s2RqBekWXKv9oiGuUsq9cVrJy+GUDEieuBYEwut7+9mVava5mz8WvSNHszOasisSef5CAPpge8NMA==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/astro-carousel/-/astro-carousel-1.0.2.tgz#7de2ea22086c516523f0a62a88da2b0f8ec3ac1e"
+  integrity sha512-qXz9+OHI872750CIShT9CbJ6tntQ5JGA1z9znFafhbAtChW4kJHtegmWRSngkl/jNaLlakN7pUnlliuyJ/nWNQ==
 
 astro-i18next@^1.0.0-beta.13:
   version "1.0.0-beta.21"
