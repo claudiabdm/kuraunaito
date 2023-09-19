@@ -27,10 +27,11 @@ const { path } = Astro.params;
               <StoryblokImage
                 blok={e}
                 preload={i < 3}
+                sizeList={[640, 768]}
                 style={{
                   maxHeight: "var(--maxHeight)",
                 }}
-                data={{ 'data-carousel-index': i }}
+                data={{ "data-carousel-index": i }}
               />
             </a>
           </li>
