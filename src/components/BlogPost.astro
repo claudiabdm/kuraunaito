@@ -1,0 +1,29 @@
+---
+import i18next from "i18next";
+import { getStories, getStoriesLocalizedPath } from "../utils/functions";
+import Breadcrumbs from "./Breadcrumbs.astro";
+
+const { path } = Astro.params;
+
+const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
+const slugs = slugsArray?.map(
+  (_, i) =>
+    slugsArray.slice(0, i + 1).join("/") +
+    (i < slugsArray.length - 1 || i === 0 ? "/" : "")
+);
+
+const {
+  data: { stories },
+} = await getStories({ params: `by_slugs=${slugs}` });
+const breadcrumbs = getStoriesLocalizedPath(stories);
+---
+
+<div>
+  <Breadcrumbs breadcrumbs={breadcrumbs} />
+  <section>
+    <article>
+      <h3></h3>
+      <!-- <RichTextRenderer content={text} {...storyblokEditable(blok)} /> -->
+    </article>
+  </section>
+</div>

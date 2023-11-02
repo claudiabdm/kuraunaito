@@ -40,8 +40,9 @@ export default defineConfig({
         columns: "components/Columns",
         rows: "components/Rows",
         spline: "components/Spline",
+        blogPost: "components/BlogPost",
       },
     }),
-    astroI18next()
+    astroI18next(),
   ],
 });
