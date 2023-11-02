@@ -1,29 +1,29 @@
 ---
 import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
-import { getStoriesLocalizedPath, getVersion } from "../utils/functions";
+import {
+  getStoriesLocalizedPath,
+  getVersion,
+  getStories,
+} from "../utils/functions";
 import Link from "./Link.astro";
 
 const { path } = Astro.params;
 const { slug } = Astro.props;
 
 const slugFormatted = slug === "home" ? "" : slug;
-const storyblokApi = useStoryblokApi();
 
 // Get menu links from config file
-const { data } = await storyblokApi.get(`cdn/stories/config`, {
-  version: getVersion(),
-});
+const {
+  data: { story },
+} = await getStories({ slug: "config" });
 
 // Get stories by ordered uuids
 const {
   data: { stories },
-} = await storyblokApi.get(
-  `cdn/stories?by_uuids_ordered=${data.story.content.headerMenu}&language=${i18next.language}`,
-  {
-    version: getVersion(),
-  }
-);
+} = await getStories({
+  params: `by_uuids_ordered=${story.content.headerMenu}`,
+});
 
 // Formatted links
 const rootSlug = slugFormatted.split("/")[0];
@@ -34,9 +34,9 @@ const links = getStoriesLocalizedPath(stories);
   <nav class="nav">
     <!-- Home -->
     <h1 class="nav__home" translate="no">
-      <Link href={`/${i18next.language == "es" ? "es" : ""}`} first={true}
-        >クラウナイト</Link
-      >
+      <Link href={`/${i18next.language == "es" ? "es" : ""}`} first={true}>
+        クラウナイト
+      </Link>
     </h1>
 
     <!-- Pages -->
@@ -46,7 +46,7 @@ const links = getStoriesLocalizedPath(stories);
           {links?.map((l, i) => (
             <Link
               href={`/${l.localizedSlug}`}
-              active={String(path).includes(l.localizedSlug.slice(0, -1))}
+              inactive={!String(path).includes(l.localizedSlug.slice(0, -1))}
             >
               {l.name}
             </Link>
@@ -57,17 +57,19 @@ const links = getStoriesLocalizedPath(stories);
 
     <!-- Languages -->
     <section class="nav__group nav__group--lang" translate="no">
-      <Link href={`/${slugFormatted}`} active={i18next.language !== "es"}
-        >en</Link
-      >
+      <Link href={`/${slugFormatted}`} inactive={i18next.language === "es"}>
+        en
+      </Link>
       <hr class="lang-divider" />
       <Link
         href={`/es/${slugFormatted.replace(
           rootSlug,
           t(rootSlug, { lng: "es" })
         )}`}
-        active={i18next.language === "es"}>es</Link
+        inactive={i18next.language !== "es"}
       >
+        es
+      </Link>
     </section>
   </nav>
 </header>

@@ -1,4 +1,6 @@
 ---
+import i18next from "i18next";
+import { getStoriesLocalizedPath, getStories } from "../utils/functions";
 import { storyblokEditable } from "@storyblok/astro";
 import Carousel from "astro-carousel";
 import Breadcrumbs from "./Breadcrumbs.astro";
@@ -6,10 +8,22 @@ import StoryblokImage from "./StoryblokImage.astro";
 
 const { blok } = Astro.props;
 const { path } = Astro.params;
+
+const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
+const slugs = slugsArray?.map(
+  (_, i) =>
+    slugsArray.slice(0, i + 1).join("/") +
+    (i < slugsArray.length - 1 || i === 0 ? "/" : "")
+);
+
+const {
+  data: { stories },
+} = await getStories({ params: `by_slugs=${slugs}` });
+const breadcrumbs = getStoriesLocalizedPath(stories);
 ---
 
 <div class="entry">
-  <Breadcrumbs {...Astro.props} />
+  <Breadcrumbs breadcrumbs={breadcrumbs} withHome />
   <ul
     class="entry__entries"
     {...storyblokEditable(blok)}

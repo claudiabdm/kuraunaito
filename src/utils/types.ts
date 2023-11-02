@@ -1,9 +1,17 @@
 export interface SbLink {
   slug: string;
+  full_slug: string;
   name: string;
   is_startpage: boolean;
   is_folder: boolean;
   published: boolean;
+}
+
+export interface Story {
+  slug: string;
+  full_slug: string;
+  name: string;
+  content: { [key: string]: any };
 }
 
 export interface Path {

@@ -1,17 +1,16 @@
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
-import type { Path, SbLink } from "./types";
+import type { Path, SbLink, Story } from "./types";
 
 export async function generatePathsFromStories() {
   const storyblokApi = useStoryblokApi();
-  const version = getVersion();
 
   // Retrieves all links from storyblok
   const {
     data: { links: dataLinks },
-  } = (await storyblokApi.get("cdn/links", {
-    version, // TODO check: this is not working as expected as is retriving all links
-  })) as { data: { links: SbLink[] } };
+  } = (await storyblokApi.get(
+    `cdn/links?version=${getVersion()}&token=${getToken()}`
+  )) as { data: { links: SbLink[] } };
 
   const home: Path[] = [
     {
@@ -48,9 +47,6 @@ export async function generatePathsFromStories() {
 
   // Format links to astro static paths
   const links = Object.values(dataLinks).reduce((links, link) => {
-    if (link.published === false && version === "published") {
-      return links;
-    }
     if (!link.is_startpage && link.slug !== "config") {
       const root = link.slug.split("/")[0];
       links.push({
@@ -92,10 +88,48 @@ export async function generatePathsFromStories() {
   return links;
 }
 
+// With params and without slug
+export async function getStories({
+  params,
+}: {
+  params: string;
+}): Promise<{ data: { stories: Story[] }; header: string }>;
+// With slug
+export async function getStories({
+  slug,
+}: {
+  params?: string;
+  slug: string;
+}): Promise<{ data: { story: Story }; header: string }>;
+// Function definition
+export async function getStories({
+  params,
+  slug,
+}: {
+  params?: string;
+  slug?: string;
+}): Promise<{
+  data: { stories?: Story[]; story?: Story };
+  header: Object;
+}> {
+  const storyblokApi = useStoryblokApi();
+  return await storyblokApi.get(
+    `cdn/stories${slug ? `/${slug}` : ""}?${
+      params ? `${params}` : ""
+    }&language=${i18next.language}&version=${getVersion()}&token=${getToken()}`
+  );
+}
+
 export function getVersion() {
   return import.meta.env.STORYBLOK_PREVIEW_ENABLED === true
     ? "draft"
     : "published";
+}
+
+export function getToken() {
+  return import.meta.env.STORYBLOK_PREVIEW_ENABLED === true
+    ? import.meta.env.STORYBLOK_PREVIEW
+    : import.meta.env.STORYBLOK_PUBLISHED;
 }
 
 export function getStoriesLocalizedPath(stories: any[]) {

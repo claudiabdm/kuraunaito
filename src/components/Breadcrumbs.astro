@@ -1,30 +1,15 @@
 ---
-import i18next from "i18next";
-import { useStoryblokApi } from "@storyblok/astro";
-import { getStoriesLocalizedPath, getVersion } from "../utils/functions";
+import i18next, { t } from "i18next";
 import Link from "./Link.astro";
 
-const storyblokApi = useStoryblokApi();
-const { path } = Astro.params;
-const { slug } = Astro.props;
+const { breadcrumbs, withHome } = Astro.props;
 
-const slugsArray = slug?.split("/");
-const slugs = slugsArray?.map(
-  (_, i) =>
-    slugsArray.slice(0, i + 1).join("/") +
-    (i < slugsArray.length - 1 || i === 0 ? "/" : "")
-);
-
-const {
-  data: { stories },
-} = await storyblokApi.get(
-  `cdn/stories?by_slugs=${slugs}&language=${i18next.language}`,
-  {
-    version: getVersion(),
-  }
-);
-
-const breadcrumbs = getStoriesLocalizedPath(stories);
+if (withHome) {
+  breadcrumbs.unshift({
+    localizedSlug: i18next.language === "en" ? "" : "es",
+    name: t("home"),
+  });
+}
 ---
 
 {
@@ -35,8 +20,7 @@ const breadcrumbs = getStoriesLocalizedPath(stories);
           <li class="breadcrumb__item">
             <Link
               href={`/${b.localizedSlug}`}
-              active={i > 0 && b.localizedSlug.includes(path)}
-              first={i === 0 && breadcrumbs.length === 1}
+              inactive={ i < breadcrumbs.length - 1}
             >
               {b.name}
             </Link>
@@ -55,7 +39,6 @@ const breadcrumbs = getStoriesLocalizedPath(stories);
     margin: 0;
     padding: 0;
     text-transform: capitalize;
-
     &__item {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -70,6 +53,10 @@ const breadcrumbs = getStoriesLocalizedPath(stories);
           color: var(--tertiary);
           margin: 0 var(--space-3xs);
         }
+      }
+
+      &--last {
+        color: var(--primary);
       }
     }
   }

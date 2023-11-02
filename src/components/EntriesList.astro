@@ -1,26 +1,21 @@
 ---
-import i18next, { t } from "i18next";
-import { useStoryblokApi } from "@storyblok/astro";
-import { getStoryLocalizedPath, getVersion } from "../utils/functions";
+import { t } from "i18next";
+import {
+  getStoryLocalizedPath,
+  getStories,
+  getStoriesLocalizedPath,
+} from "../utils/functions";
 import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
 import StoryblokImage from "./StoryblokImage.astro";
 
-const storyblokApi = useStoryblokApi();
-
 const { blok, lang } = Astro.props;
-
 const slug = blok.slug || Astro.props.slug;
 
 const {
   data: { stories },
-} = await storyblokApi.get(
-  `cdn/stories?starts_with=${slug}&language=${i18next.language}`,
-  {
-    version: getVersion(),
-  }
-);
+} = await getStories({ params: `starts_with=${slug}` });
 
 // Display stories and folders that are in current folder
 const root = stories.find((s) => slug.includes(s.slug));
@@ -56,11 +51,13 @@ if (withLimit) {
 }
 
 const defaultImage = blok.defaultImage.filename ? blok.defaultImage : null;
+
+const breadcrumbs = getStoriesLocalizedPath([root]);
 ---
 
 <div class:list={["container", { "container--cols": Boolean(defaultImage) }]}>
   <section class="container__nav">
-    <Breadcrumbs {...Astro.props, {slug}} />
+    <Breadcrumbs breadcrumbs={breadcrumbs} withHome={blok.withHome} />
 
     <ul class:list={["linkList", { "linkList--limit": withLimit }]}>
       {

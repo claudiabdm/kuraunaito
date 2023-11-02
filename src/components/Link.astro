@@ -1,17 +1,19 @@
 ---
-const { href, active, first, ellipsis, class: className } = Astro.props;
+const { href, inactive, ellipsis, class: className } = Astro.props;
 ---
 
-<a href={href} class:list={["link", className, { ellipsis, active, first }]}>
+<a href={href} class:list={["link", className, { ellipsis, inactive }]}>
   <slot />
 </a>
 
 <style lang="scss">
   .link {
     text-decoration: none;
-    &.active {
+
+    &.inactive {
       color: var(--secondary);
     }
+    
     &.ellipsis {
       text-overflow: ellipsis;
       overflow: hidden;
