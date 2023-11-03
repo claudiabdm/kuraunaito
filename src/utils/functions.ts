@@ -144,7 +144,7 @@ export function getStoryLocalizedPath(story: any) {
   };
 }
 
-export function getDate(fromDate?: string, toDate?: string, lang?: string) {
+export function getDate(fromDate?: string, toDate?: string, lang: string = i18next.language) {
   const from = formatDate(fromDate);
   const to = formatDate(toDate);
   const dateField = from == to ? from : `${from} - ${to}`;

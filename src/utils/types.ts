@@ -12,6 +12,7 @@ export interface Story {
   full_slug: string;
   name: string;
   content: { [key: string]: any };
+  published_at: string;
 }
 
 export interface Path {

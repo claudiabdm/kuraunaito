@@ -1,9 +1,17 @@
 ---
-import i18next from "i18next";
-import { getStories, getStoriesLocalizedPath } from "../utils/functions";
+import i18next, { t } from "i18next";
+import {
+  getDate,
+  getStories,
+  getStoriesLocalizedPath,
+} from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
+import { storyblokEditable } from "@storyblok/astro";
+// import type { RichTextType } from "storyblok-rich-text-astro-renderer"
+import RichTextRenderer from "storyblok-rich-text-astro-renderer/RichTextRenderer.astro";
 
 const { path } = Astro.params;
+const { blok } = Astro.props;
 
 const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
 const slugs = slugsArray?.map(
@@ -16,14 +24,78 @@ const {
   data: { stories },
 } = await getStories({ params: `by_slugs=${slugs}` });
 const breadcrumbs = getStoriesLocalizedPath(stories);
+const currentStory = stories.find((s) => s.full_slug === path);
+const publishedAt = getDate(currentStory?.published_at);
+
+const readingTime = calculateReadingTime(blok.article.content);
+
+function calculateReadingTime(content: any[]) {
+  const totalWords = _countWords(content);
+  const time = totalWords / 200;
+  const minutes = Math.ceil(time);
+  return minutes;
+
+  function _countWords(content: any[], count: number = 0) {
+    for (const c of content) {
+      if (c.content) {
+        count += _countWords(c.content);
+      } else if (c.text) {
+        count += c.text.split(" ").length;
+      }
+    }
+    return count;
+  }
+}
 ---
 
 <div>
   <Breadcrumbs breadcrumbs={breadcrumbs} />
-  <section>
+  <section class="blog">
     <article>
-      <h3></h3>
-      <!-- <RichTextRenderer content={text} {...storyblokEditable(blok)} /> -->
+      <header class="blog__header">
+        <h3 class="blog__title">{blok.title}</h3>
+        <p>{blok.intro}</p>
+        <div class="blog__metadata">
+          <span class="blog__published">
+            {t("last-updated")}
+            <time datetime={currentStory?.published_at} class="blog__time"
+              >{publishedAt}</time
+            >
+          </span>
+          |
+          <span class="blog__readingtime">
+            <time class="blog__time">{readingTime}</time>
+            {t("minutes")}
+          </span>
+        </div>
+      </header>
+      <RichTextRenderer content={blok.article} {...storyblokEditable(blok)} />
     </article>
   </section>
 </div>
+
+<style lang="scss">
+  .blog {
+    &__header {
+      margin: var(--space-l) 0;
+      padding: var(--space-l) 0;
+    }
+    &__title {
+      font-size: var(--step-5);
+    }
+
+    &__metadata {
+      color: var(--secondary);
+      font-size: var(--step--1);
+    }
+
+    &__published {
+    }
+
+    &__time {
+      &::before, &::after {
+        content: " ";
+      }
+    }
+  }
+</style>

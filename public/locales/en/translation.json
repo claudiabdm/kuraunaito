@@ -1,5 +1,7 @@
 {
   "home": "home",
   "photos": "photos",
-  "see-more": "see more..."
+  "see-more": "see more...",
+  "last-updated": "Last updated on",
+  "minutes": "minutes read"
 }

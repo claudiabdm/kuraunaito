@@ -814,7 +814,7 @@ array-iterate@^2.0.0:
   resolved "https://registry.yarnpkg.com/array-iterate/-/array-iterate-2.0.1.tgz#6efd43f8295b3fee06251d3d62ead4bd9805dd24"
   integrity sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==
 
-astro-carousel@^1.0.1:
+astro-carousel@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/astro-carousel/-/astro-carousel-1.0.2.tgz#7de2ea22086c516523f0a62a88da2b0f8ec3ac1e"
   integrity sha512-qXz9+OHI872750CIShT9CbJ6tntQ5JGA1z9znFafhbAtChW4kJHtegmWRSngkl/jNaLlakN7pUnlliuyJ/nWNQ==
@@ -3132,6 +3132,11 @@ storyblok-js-client@^5.14.2:
   version "5.14.4"
   resolved "https://registry.yarnpkg.com/storyblok-js-client/-/storyblok-js-client-5.14.4.tgz#bfc69995bc4ca40a9bd1e5745a651b4eca591b08"
   integrity sha512-9yY33tvfO3Cbe25h/l6K0T3IxJeOOyGl/pCwsd55woT0ZEBhIiEZoMumpRsyLjD5AedW9KXLbLjMXhHazkepCA==
+
+storyblok-rich-text-astro-renderer@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/storyblok-rich-text-astro-renderer/-/storyblok-rich-text-astro-renderer-2.0.0.tgz#28d2c6a202909bb3f2391444909941d328215817"
+  integrity sha512-UKwYn5T3V1nwtsffpJ6aH3GnYxT166ESvDJijiD0e58Hzsz/B8TMyjZEXeJsR/8r7jgYzeae7uMOuR7ZwgTdGg==
 
 streamsearch@^1.1.0:
   version "1.1.0"
