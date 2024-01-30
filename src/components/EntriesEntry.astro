@@ -23,6 +23,7 @@ const { path } = Astro.params;
               href={`/${path}?image=${i}`}
               data-carousel-index={i}
               class="entry__link"
+              arial-label={`Open image  ${e.name || i}`}
             >
               <StoryblokImage
                 blok={e}
