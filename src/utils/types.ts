@@ -1,4 +1,6 @@
 export interface SbLink {
+  id: string;
+  parent_id: string;
   slug: string;
   full_slug: string;
   name: string;
@@ -21,10 +23,20 @@ export interface Path {
   };
   props: {
     slug: string;
-    lang: string;
+    lang: Language;
     title: string;
+    breadcrumbs: Breadcrumb[];
   };
 }
+
+export interface Breadcrumb {
+  path: string;
+  name: string;
+}
+
+export const LANGUAGES = ["en", "es", ""] as const;
+
+export type Language = (typeof LANGUAGES)[number];
 
 export interface Image {
   width: number;

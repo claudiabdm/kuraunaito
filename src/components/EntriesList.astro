@@ -1,16 +1,13 @@
 ---
 import { t } from "i18next";
-import {
-  getStoryLocalizedPath,
-  getStories,
-  getStoriesLocalizedPath,
-} from "../utils/functions";
+import { getStoryLocalizedPath, getStories } from "../utils/functions";
 import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
 import StoryblokImage from "./StoryblokImage.astro";
 
-const { blok, lang } = Astro.props;
+const { blok } = Astro.props;
+const { path } = Astro.params;
 const slug = blok.slug || Astro.props.slug;
 
 const {
@@ -21,20 +18,20 @@ const {
 const root = stories.find((s) => slug.includes(s.slug));
 const level = root?.full_slug.split("/").length - 1;
 const storiesInRoot = stories
-  .filter((story) => {
-    if (
+  .filter(
+    (story) =>
       story !== root &&
       story.full_slug.split("/").filter((s) => s).length === level + 1
-    ) {
-      return true;
-    }
-  })
+  )
   .sort(
     (a, b) =>
       new Date(b.content.from || new Date()).getTime() -
       new Date(a.content.from || new Date()).getTime()
   )
-  .map((story) => ({ ...story, ...getStoryLocalizedPath(story) }));
+  .map((story) => ({
+    ...story,
+    ...getStoryLocalizedPath(story, path),
+  }));
 
 // Add see more if limit is set
 const maxItems = Math.min(Number(blok.maxItems), storiesInRoot.length);
@@ -45,19 +42,20 @@ if (withLimit) {
   }
   storiesInRoot.push({
     ...root,
-    ...getStoryLocalizedPath(root),
+    ...getStoryLocalizedPath(root, path),
     name: t("see-more"),
   });
 }
 
 const defaultImage = blok.defaultImage.filename ? blok.defaultImage : null;
-
-const breadcrumbs = getStoriesLocalizedPath([root]);
+const breadcrumbs = blok.withHome
+  ? Astro.props.breadcrumbs
+  : [getStoryLocalizedPath(root)];
 ---
 
 <div class:list={["container", { "container--cols": Boolean(defaultImage) }]}>
   <section class="container__nav">
-    <Breadcrumbs breadcrumbs={breadcrumbs} withHome={blok.withHome} />
+    <Breadcrumbs breadcrumbs={breadcrumbs} />
 
     <ul class:list={["linkList", { "linkList--limit": withLimit }]}>
       {
@@ -87,11 +85,11 @@ const breadcrumbs = getStoriesLocalizedPath([root]);
                 y2={i < storiesInRoot.length - 1 ? 50 : 25}
               />
             </svg>
-            <Link href={`/${s.localizedSlug}`} ellipsis={true}>
-              {t(s.name)}
+            <Link href={`/${s.path}`} ellipsis={true}>
+              <div class="linkList__name">{t(s.name)}</div>
               {t(s.name) != t("see-more") && (
                 <div class="linkList__date">
-                  {getDate(s.content.from, s.content.to, lang)}
+                  {getDate(s.content.from, s.content.to)}
                 </div>
               )}
             </Link>
@@ -155,6 +153,10 @@ const breadcrumbs = getStoriesLocalizedPath([root]);
       height: 48px;
       align-items: center;
       gap: 0 var(--space-3xs);
+    }
+
+    &__name:first-letter {
+      text-transform: uppercase;
     }
 
     &__date {

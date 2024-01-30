@@ -1,35 +1,21 @@
 ---
-import i18next, { t } from "i18next";
 import Link from "./Link.astro";
-
-const { breadcrumbs, withHome } = Astro.props;
-
-if (withHome) {
-  breadcrumbs.unshift({
-    localizedSlug: i18next.language === "en" ? "" : "es",
-    name: t("home"),
-  });
-}
+const { breadcrumbs } = Astro.props;
 ---
 
-{
-  (
-    <h2>
-      <ul class="breadcrumb" translate="no">
-        {breadcrumbs.map((b, i) => (
-          <li class="breadcrumb__item">
-            <Link
-              href={`/${b.localizedSlug}`}
-              inactive={ i < breadcrumbs.length - 1}
-            >
-              {b.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </h2>
-  )
-}
+<h2>
+  <ul class="breadcrumb" translate="no">
+    {
+      breadcrumbs.map((b, i) => (
+        <li class="breadcrumb__item">
+          <Link href={`/${b.path}`} inactive={i < breadcrumbs.length - 1}>
+            {b.name}
+          </Link>
+        </li>
+      ))
+    }
+  </ul>
+</h2>
 
 <style lang="scss">
   .breadcrumb {
@@ -39,6 +25,7 @@ if (withHome) {
     margin: 0;
     padding: 0;
     text-transform: capitalize;
+    font-size: 1rem;
     &__item {
       overflow: hidden;
       text-overflow: ellipsis;

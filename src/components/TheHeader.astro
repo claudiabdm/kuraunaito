@@ -1,17 +1,11 @@
 ---
 import i18next, { t } from "i18next";
-import { useStoryblokApi } from "@storyblok/astro";
-import {
-  getStoriesLocalizedPath,
-  getVersion,
-  getStories,
-} from "../utils/functions";
+import { getStoriesLocalizedPath, getStories } from "../utils/functions";
 import Link from "./Link.astro";
+import { LANGUAGES } from "../utils/types";
 
 const { path } = Astro.params;
 const { slug } = Astro.props;
-
-const slugFormatted = slug === "home" ? "" : slug;
 
 // Get menu links from config file
 const {
@@ -26,8 +20,11 @@ const {
 });
 
 // Formatted links
-const rootSlug = slugFormatted.split("/")[0];
-const links = getStoriesLocalizedPath(stories);
+function langPath(l) {
+  const root = slug.split("/")[0];
+  return `/${l}/${slug.replace(root, t(root, { lng: l }))}`;
+}
+const links = getStoriesLocalizedPath(stories, path);
 ---
 
 <header class="header">
@@ -44,10 +41,7 @@ const links = getStoriesLocalizedPath(stories);
       links?.length > 1 && (
         <section class="nav__group">
           {links?.map((l, i) => (
-            <Link
-              href={`/${l.localizedSlug}`}
-              inactive={!String(path).includes(l.localizedSlug.slice(0, -1))}
-            >
+            <Link href={`/${l.path}`} inactive={!String(path).includes(l.name)}>
               {l.name}
             </Link>
           ))}
@@ -57,19 +51,16 @@ const links = getStoriesLocalizedPath(stories);
 
     <!-- Languages -->
     <section class="nav__group nav__group--lang" translate="no">
-      <Link href={`/${slugFormatted}`} inactive={i18next.language === "es"}>
-        en
-      </Link>
-      <hr class="lang-divider" />
-      <Link
-        href={`/es/${slugFormatted.replace(
-          rootSlug,
-          t(rootSlug, { lng: "es" })
-        )}`}
-        inactive={i18next.language !== "es"}
-      >
-        es
-      </Link>
+      {
+        LANGUAGES.filter((l) => l !== "").map((l, i, list) => (
+          <>
+            <Link href={langPath(l)} inactive={i18next.language !== l}>
+              {l}
+            </Link>
+            {i < list.length - 1 && <hr class="lang-divider" />}
+          </>
+        ))
+      }
     </section>
   </nav>
 </header>

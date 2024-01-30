@@ -1,6 +1,123 @@
 import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
-import type { Path, SbLink, Story } from "./types";
+import {
+  LANGUAGES,
+  type Breadcrumb,
+  type Language,
+  type Path,
+  type SbLink,
+  type Story,
+} from "./types";
+
+const DEFAULT_PATH: {
+  [k in Language | "default"]: Path;
+} = {
+  default: {
+    params: {
+      path: undefined,
+    },
+    props: {
+      title: "home",
+      slug: "home",
+      lang: "en",
+      breadcrumbs: [
+        {
+          path: "",
+          name: t("home", { lng: "" }),
+        },
+      ],
+    },
+  },
+  ...LANGUAGES.reduce(
+    (acc, lang) => {
+      acc[lang] = {
+        params: {
+          path: lang,
+        },
+        props: {
+          title: t("home", { lng: lang }),
+          slug: "home",
+          lang: lang,
+          breadcrumbs: [
+            {
+              path: lang,
+              name: t("home", { lng: lang }),
+            },
+          ],
+        },
+      };
+      return acc;
+    },
+    {} as {
+      [k in Language]: Path;
+    }
+  ),
+};
+function massageLink(
+  link: SbLink,
+  lang?: Language,
+  breadcrumbs: Breadcrumb[] = DEFAULT_PATH[lang ?? "default"].props.breadcrumbs
+): Path {
+  const root = link.slug.split("/")[0];
+
+  if (lang) {
+    const path = `${lang}/${link.slug.replace(root, t(root, { lng: lang }))}`;
+    return {
+      params: { path },
+      props: {
+        title: t(link.name, { lng: lang }),
+        slug: `${link.slug}${link.is_folder ? "/" : ""}`,
+        lang: lang,
+        breadcrumbs: [
+          ...breadcrumbs,
+          {
+            path,
+            name: t(link.name.toLowerCase(), { lng: lang }),
+          },
+        ],
+      },
+    };
+  }
+  return {
+    params: {
+      path: link.slug,
+    },
+    props: {
+      title: link.name,
+      slug: `${link.slug}${link.is_folder ? "/" : ""}`,
+      lang: "en",
+      breadcrumbs: [
+        ...breadcrumbs,
+        {
+          path: link.slug,
+          name: link.name,
+        },
+      ],
+    },
+  };
+}
+
+function massageLinks(
+  dataLinks: SbLink[],
+  lang?: Language,
+  breadcrumbs?: Breadcrumb[]
+): Path[] {
+  const links: Path[] = [];
+
+  for (const link of dataLinks) {
+    if (!link.is_startpage && link.slug !== "config") {
+      if (link.parent_id) {
+        const parentLink = dataLinks.find((l) => l.id === link.parent_id);
+        const parentBreadcrumbs = massageLink(parentLink, lang, breadcrumbs)
+          .props.breadcrumbs;
+        links.push(massageLink(link, lang, parentBreadcrumbs));
+      } else {
+        links.push(massageLink(link, lang, breadcrumbs));
+      }
+    }
+  }
+  return links;
+}
 
 export async function generatePathsFromStories() {
   const storyblokApi = useStoryblokApi();
@@ -10,80 +127,20 @@ export async function generatePathsFromStories() {
     data: { links: dataLinks },
   } = (await storyblokApi.get(
     `cdn/links?version=${getVersion()}&token=${getToken()}`
-  )) as { data: { links: SbLink[] } };
+  )) as { data: { links: { [key: string]: SbLink } } };
 
-  const home: Path[] = [
-    {
-      params: {
-        path: undefined,
-      },
-      props: {
-        slug: "home",
-        title: t("home", { lng: "en" }),
-        lang: "en",
-      },
-    },
-    {
-      params: {
-        path: "en",
-      },
-      props: {
-        slug: "home",
-        title: t("home", { lng: "en" }),
-        lang: "en",
-      },
-    },
-    {
-      params: {
-        path: "es",
-      },
-      props: {
-        slug: "home",
-        title: t("home", { lng: "es" }),
-        lang: "es",
-      },
-    },
-  ];
+  const dataLinksList = Object.values(dataLinks);
+
+  const parent = DEFAULT_PATH;
 
   // Format links to astro static paths
-  const links = Object.values(dataLinks).reduce((links, link) => {
-    if (!link.is_startpage && link.slug !== "config") {
-      const root = link.slug.split("/")[0];
-      links.push({
-        params: {
-          path: link.slug,
-        },
-        props: {
-          slug: `${link.slug}${link.is_folder ? "/" : ""}`,
-          title: link.name,
-          lang: "en",
-        },
-      });
-      links.push({
-        params: {
-          path: `en/${link.slug.replace(root, t(root, { lng: "en" }))}`,
-        },
-        props: {
-          slug: `${link.slug}${link.is_folder ? "/" : ""}`,
-          title: t(link.name, { lng: "en" }),
-          lang: "en",
-        },
-      });
-      links.push({
-        params: {
-          path: `es/${link.slug.replace(root, t(root, { lng: "es" }))}`,
-        },
-        props: {
-          slug: `${link.slug}${link.is_folder ? "/" : ""}`,
-          title: t(link.name, { lng: "es" }),
-          lang: "es",
-        },
-      });
-    }
-    return links;
-  }, [] as Path[]);
+  const links = massageLinks(dataLinksList);
+  links.push(parent.default);
 
-  links.push(...home);
+  for (const lang of LANGUAGES) {
+    links.push(parent[lang]);
+    links.push(...massageLinks(dataLinksList, lang));
+  }
 
   return links;
 }
@@ -132,32 +189,43 @@ export function getToken() {
     : import.meta.env.STORYBLOK_PUBLISHED;
 }
 
-export function getStoriesLocalizedPath(stories: any[]) {
-  return stories.map((s) => getStoryLocalizedPath(s));
+export function getStoriesLocalizedPath(stories: any[], rootPath?: string): Breadcrumb[] {
+  return stories.map((s) => getStoryLocalizedPath(s, rootPath));
 }
 
-export function getStoryLocalizedPath(story: any) {
-  const rootSlug = story.full_slug.replace("es/", "").split("/")[0];
+export function getStoryLocalizedPath(
+  story: any,
+  rootPath?: string
+): Breadcrumb {
+  const folder =
+    story.lang === "default"
+      ? story.full_slug.split("/")[0]
+      : story.full_slug.split("/")[1];
+      const localizedPath = story.full_slug.replace(folder, t(folder));
   return {
-    localizedSlug: story.full_slug.replace(rootSlug, t(rootSlug)),
+    path: rootPath?.startsWith('en') ? 'en/' + localizedPath : localizedPath,
     name: t(story.name.toLowerCase() || story.slug),
   };
 }
 
-export function getDate(fromDate?: string, toDate?: string, lang: string = i18next.language) {
+export function getDate(fromDate?: string, toDate: string = fromDate) {
   const from = formatDate(fromDate);
   const to = formatDate(toDate);
   const dateField = from == to ? from : `${from} - ${to}`;
-
-  function formatDate(date: string) {
-    const dtFormat = new Intl.DateTimeFormat(lang, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    return date ? dtFormat.format(new Date(date)) : dtFormat.format(new Date());
-  }
   return dateField;
+}
+
+export function formatDate(
+  date: string,
+  lang: string = i18next.language,
+  short: boolean = false
+) {
+  const dtFormat = new Intl.DateTimeFormat(lang, {
+    year: "numeric",
+    month: short ? "numeric" : "long",
+    day: "numeric",
+  });
+  return date ? dtFormat.format(new Date(date)) : dtFormat.format(new Date());
 }
 
 export function getSize(filename?: string): { width: number; height: number } {
