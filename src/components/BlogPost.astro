@@ -1,17 +1,14 @@
 ---
 import i18next, { t } from "i18next";
-import {
-  getDate,
-  getStories,
-  getStoriesLocalizedPath,
-} from "../utils/functions";
+import { formatDate, getStories } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import { storyblokEditable } from "@storyblok/astro";
-// import type { RichTextType } from "storyblok-rich-text-astro-renderer"
 import RichTextRenderer from "storyblok-rich-text-astro-renderer/RichTextRenderer.astro";
+import Svg from "./Svg.astro";
+import StoryblokImage from "./StoryblokImage.astro";
 
 const { path } = Astro.params;
-const { blok } = Astro.props;
+const { blok, breadcrumbs } = Astro.props;
 
 const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
 const slugs = slugsArray?.map(
@@ -23,9 +20,8 @@ const slugs = slugsArray?.map(
 const {
   data: { stories },
 } = await getStories({ params: `by_slugs=${slugs}` });
-const breadcrumbs = getStoriesLocalizedPath(stories);
 const currentStory = stories.find((s) => s.full_slug === path);
-const publishedAt = getDate(currentStory?.published_at);
+const publishedAt = formatDate(currentStory?.published_at);
 
 const readingTime = calculateReadingTime(blok.article.content);
 
@@ -54,19 +50,26 @@ function calculateReadingTime(content: any[]) {
     <article>
       <header class="blog__header">
         <h3 class="blog__title">{blok.title}</h3>
-        <p>{blok.intro}</p>
         <div class="blog__metadata">
-          <span class="blog__published">
-            {t("last-updated")}
+          <span>
+            <Svg name="date" aria-label="Last updated" size="14" />
             <time datetime={currentStory?.published_at} class="blog__time"
               >{publishedAt}</time
             >
           </span>
-          |
-          <span class="blog__readingtime">
+          <span>
+            <Svg name="time" size="14" />
             <time class="blog__time">{readingTime}</time>
             {t("minutes")}
           </span>
+          <span>
+            <Svg name="person" aria-label="Written by" size="14" />
+            {blok.author}
+          </span>
+        </div>
+        <p class="blog__intro">{blok.intro}</p>
+        <div class="blog__image">
+          <StoryblokImage blok={blok.image} sizeList={[1234]} />
         </div>
       </header>
       <RichTextRenderer content={blok.article} {...storyblokEditable(blok)} />
@@ -77,23 +80,38 @@ function calculateReadingTime(content: any[]) {
 <style lang="scss">
   .blog {
     &__header {
-      margin: var(--space-l) 0;
-      padding: var(--space-l) 0;
+      padding: var(--space-m) 0;
     }
     &__title {
       font-size: var(--step-5);
     }
 
-    &__metadata {
-      color: var(--secondary);
-      font-size: var(--step--1);
+    &__intro {
+      margin-top: var(--space-s);
+      font-style: italic;
     }
 
-    &__published {
+    &__metadata {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: var(--space-xxs);
+      color: var(--secondary);
+      font-size: 0.75rem;
+      & span {
+        display: inline-flex;
+        gap: 2px;
+        align-items: center;
+      }
+    }
+
+    &__image {
+      margin-top: var(--space-s);
     }
 
     &__time {
-      &::before, &::after {
+      &::before,
+      &::after {
         content: " ";
       }
     }

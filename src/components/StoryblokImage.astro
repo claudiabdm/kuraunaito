@@ -9,7 +9,7 @@ const {
   breakpoints = [320, 400, 640, 768],
   preload = false,
   formats = ["webp", "avif", "png"],
-  aspectRatio = "auto",
+  aspectRatio = undefined,
   index = 0,
   data = {},
 } = Astro.props;
@@ -75,10 +75,6 @@ function createSrc(image: string, imageOptions: string): string {
           style={{
             ...style,
             aspectRatio,
-            ...(autoSize && {
-              width: size.width,
-              height: size.height,
-            }),
           }}
           alt={blok.alt ?? ""}
           width={size.width}
@@ -110,6 +106,8 @@ function createSrc(image: string, imageOptions: string): string {
 
   .picture {
     position: relative;
+    // width: 100%;
+    // height: auto;
   }
 
   .image {
@@ -119,7 +117,7 @@ function createSrc(image: string, imageOptions: string): string {
     object-position: center;
     &--auto-size {
       width: 100%;
-      height: 100%;
+      height: auto;
       object-position: top left;
     }
   }

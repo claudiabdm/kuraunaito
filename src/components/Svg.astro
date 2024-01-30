@@ -1,0 +1,14 @@
+---
+import sprite from "../icons/sprite.svg?url";
+
+const { name, description, size, height } = Astro.props;
+---
+
+<svg
+  class="icon"
+  aria-label={description}
+  width={size}
+  height={size}
+>
+  <use href={`${sprite}#${name}`}></use>
+</svg>
