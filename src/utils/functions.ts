@@ -122,27 +122,28 @@ function massageLinks(
 export async function generatePathsFromStories() {
   const storyblokApi = useStoryblokApi();
 
-  // Retrieves all links from storyblok
-  const {
-    data: { links: dataLinks },
-  } = (await storyblokApi.get(
-    `cdn/links?version=${getVersion()}&token=${getToken()}`
-  )) as { data: { links: { [key: string]: SbLink } } };
+  try {
+    // Retrieves all links from storyblok
+    const dataLinks = (await storyblokApi.getAll("cdn/links", {
+      version: getVersion(),
+    })) as SbLink[];
 
-  const dataLinksList = Object.values(dataLinks);
+    const parent = DEFAULT_PATH;
 
-  const parent = DEFAULT_PATH;
+    // Format links to astro static paths
+    const links = massageLinks(dataLinks);
+    links.push(parent.default);
 
-  // Format links to astro static paths
-  const links = massageLinks(dataLinksList);
-  links.push(parent.default);
+    for (const lang of LANGUAGES) {
+      links.push(parent[lang]);
+      links.push(...massageLinks(dataLinks, lang));
+    }
 
-  for (const lang of LANGUAGES) {
-    links.push(parent[lang]);
-    links.push(...massageLinks(dataLinksList, lang));
+    return links;
+  } catch (err) {
+    console.log("generatePathFromStories", err);
   }
-
-  return links;
+  return [];
 }
 
 // With params and without slug
@@ -169,12 +170,25 @@ export async function getStories({
   data: { stories?: Story[]; story?: Story };
   header: Object;
 }> {
-  const storyblokApi = useStoryblokApi();
-  return await storyblokApi.get(
-    `cdn/stories${slug ? `/${slug}` : ""}?${
-      params ? `${params}` : ""
-    }&language=${i18next.language}&version=${getVersion()}&token=${getToken()}`
-  );
+  try {
+    const searchParams = new URLSearchParams(params);
+    const paramsObj = {};
+    for (const [key, value] of searchParams) {
+      paramsObj[key] = value;
+    }
+    const storyblokApi = useStoryblokApi();
+    const data = await storyblokApi.get(
+      `cdn/stories${slug ? `/${slug}` : ""}`,
+      {
+        ...paramsObj,
+        language: i18next.language,
+        version: getVersion(),
+      }
+    );
+    return data;
+  } catch (err) {
+    console.log("getStories", err);
+  }
 }
 
 export function getVersion() {
@@ -189,7 +203,10 @@ export function getToken() {
     : import.meta.env.STORYBLOK_PUBLISHED;
 }
 
-export function getStoriesLocalizedPath(stories: any[], rootPath?: string): Breadcrumb[] {
+export function getStoriesLocalizedPath(
+  stories: any[],
+  rootPath?: string
+): Breadcrumb[] {
   return stories.map((s) => getStoryLocalizedPath(s, rootPath));
 }
 
@@ -201,9 +218,9 @@ export function getStoryLocalizedPath(
     story.lang === "default"
       ? story.full_slug.split("/")[0]
       : story.full_slug.split("/")[1];
-      const localizedPath = story.full_slug.replace(folder, t(folder));
+  const localizedPath = story.full_slug.replace(folder, t(folder));
   return {
-    path: rootPath?.startsWith('en') ? 'en/' + localizedPath : localizedPath,
+    path: rootPath?.startsWith("en") ? "en/" + localizedPath : localizedPath,
     name: t(story.name.toLowerCase() || story.slug),
   };
 }

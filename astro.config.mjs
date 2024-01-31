@@ -17,6 +17,7 @@ const storyblokConfig =
       };
 // https://astro.build/config
 export default defineConfig({
+  site: process.env.SITE,
   integrations: [
     sitemap({
       i18n: {
@@ -34,7 +35,6 @@ export default defineConfig({
       components: {
         page: "components/Page",
         text: "components/Text",
-        entriesListLatest: "components/EntriesListLatest",
         entriesEntry: "components/EntriesEntry",
         entriesList: "components/EntriesList",
         columns: "components/Columns",

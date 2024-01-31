@@ -12,16 +12,16 @@
     "https-dev": "astro dev & local-ssl-proxy --source 3010 --target 4321 --cert localhost.pem --key localhost-key.pem"
   },
   "dependencies": {
-    "@astrojs/netlify": "^3.0.1",
-    "@astrojs/sitemap": "^1.0.0",
+    "@astrojs/netlify": "^5.0.0",
+    "@astrojs/sitemap": "^3.0.5",
     "@fontsource/roboto": "^5.0.8",
-    "@storyblok/astro": "^3.0.0",
-    "astro": "^3.0.7",
+    "@storyblok/astro": "^4.0.2",
+    "astro": "^4.2.8",
     "astro-carousel": "^1.0.2",
-    "astro-i18next": "^1.0.0-beta.13",
+    "astro-i18next": "1.0.0-beta.21",
     "axios": "^0.27.2",
     "dotenv": "^16.0.3",
-    "storyblok-rich-text-astro-renderer": "^2.0.0"
+    "storyblok-rich-text-astro-renderer": "^2.1.1"
   },
   "devDependencies": {
     "sass": "^1.56.1"
