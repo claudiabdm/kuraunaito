@@ -2,7 +2,5 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "strict": false,
-    // Error when a value import is only used as a type.
-    "importsNotUsedAsValues": "error"
   }
 }
