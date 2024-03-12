@@ -1,24 +1,31 @@
 ---
 import i18next from "i18next";
-import "@fontsource/roboto";
-import "../styles/global.css";
+import styles from "../styles/global.css?url";
 import TheHeader from "../components/TheHeader.astro";
 import Meta from "../components/Meta.astro";
 
 const { title, slug, seo } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={i18next.language}>
   <head>
-    <Meta meta={seo} title={title} />
-  </head>
-  <body class="body">
-    <TheHeader slug={slug} />
-    <main class="main">
-      <slot />
-    </main>
-    <style lang="scss">
+    <Meta
+      meta={seo}
+      title={title}
+    />
+    <link
+      rel="preload"
+      as="style"
+      href={styles}
+    />
+    <link
+      rel="stylesheet"
+      href={styles}
+    />
+    <slot name="head" />
+
+    <style is:inline>
       .body {
         max-width: 1040px;
         margin-left: auto;
@@ -28,5 +35,11 @@ const { title, slug, seo } = Astro.props;
         font-size: var(--step-0);
       }
     </style>
+  </head>
+  <body class="body">
+    <TheHeader slug={slug} />
+    <main class="main">
+      <slot />
+    </main>
   </body>
 </html>

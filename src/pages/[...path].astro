@@ -14,8 +14,30 @@ i18next.changeLanguage(lang);
 const {
   data: { story },
 } = await getStories({ slug });
+
+const hasEntriesComponent = story.content.component === "EntriesEntry";
 ---
 
+<Fragment slot="head">
+  {
+    hasEntriesComponent && (
+      <>
+        <link
+          rel="preconnect"
+          href="https://cdn.jsdelivr.net"
+        />
+        <link
+          rel="preconnect"
+          href="https://app.storyblok.com"
+        />
+      </>
+    )
+  }
+</Fragment>
+
 <Layout {...{ title, slug, seo: story.content.seo }}>
-  <StoryblokComponent {...Astro.props} blok={story?.content} />
+  <StoryblokComponent
+    {...Astro.props}
+    blok={story?.content}
+  />
 </Layout>

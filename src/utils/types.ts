@@ -13,7 +13,13 @@ export interface Story {
   slug: string;
   full_slug: string;
   name: string;
-  content: { [key: string]: any };
+  content: {
+    component: string,
+    entries?: {
+      filename: string,
+      type: 'asset'
+    }[], [key: string]: any
+  };
   published_at: string;
 }
 
