@@ -141,7 +141,7 @@ export async function generatePathsFromStories() {
 
     return links;
   } catch (err) {
-    console.log("generatePathFromStories", err);
+    console.error("generatePathFromStories", err);
   }
   return [];
 }
@@ -187,7 +187,7 @@ export async function getStories({
     );
     return data;
   } catch (err) {
-    console.log("getStories", err);
+    console.error("getStories", err);
   }
 }
 
