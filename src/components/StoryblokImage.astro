@@ -7,13 +7,14 @@ const {
   style,
   sizeList = [400, 640, 768],
   breakpoints = [320, 400, 640, 768],
-  preload = false,
+  preload = undefined,
   formats = ["webp", "avif", "png"],
   aspectRatio = undefined,
   index = 0,
   data = {},
 } = Astro.props;
 
+const uuid = crypto.randomUUID();
 const src = createSrc(blok.filename, "1280x0/smart");
 const srcset = {
   png: createSrcset(blok.filename, "filters:format(png)", sizeList),
@@ -25,7 +26,7 @@ const size = getSize(blok.filename);
 function createSrcset(
   image: string,
   imageOptions: string,
-  sizeList: number[] = [320, 640]
+  sizeList: number[] = [320, 640],
 ): string[] {
   const srcset = [];
   for (const size of sizeList) {
@@ -41,65 +42,83 @@ function createSrc(image: string, imageOptions: string): string {
 }
 ---
 
-<picture class="picture">
-  {
-    (
-      <>
-        {formats?.map((format) => (
-          <>
-            <source
-              srcset={`${srcset[format]?.[0]}`}
-              media={`(max-width: ${breakpoints[0]}px)`}
-              type={`image/${format}`}
-            />
-            {srcset[format]?.map((srcsetStr, index) => (
+<script>
+  class AstroStoryblokImage extends HTMLElement {
+    constructor() {
+      super();
+      const uuid = this.dataset.uuid;
+      const image = document.querySelector(`img[data-uuid="${uuid}"]`);
+      if (image) {
+        const isComplete = (image as HTMLImageElement).complete;
+        const loading = image.parentElement.querySelector(".loading");
+        if (isComplete) {
+          loading?.remove();
+        } else {
+          (image as HTMLElement).onload = () => {
+            loading?.remove();
+          };
+        }
+      }
+    }
+  }
+
+  customElements.define("astro-storyblok-image", AstroStoryblokImage);
+</script>
+
+<astro-storyblok-image data-uuid={uuid}>
+  <picture class="picture">
+    <div class="loading">
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+    </div>
+    {
+      (
+        <>
+          {formats?.map((format) => (
+            <>
               <source
-                srcset={srcsetStr}
-                media={`${`(min-width: ${
-                  breakpoints[index]
-                }px) and (max-width: ${breakpoints[index + 1]}px)`}`}
+                srcset={`${srcset[format]?.[0]}`}
+                media={`(max-width: ${breakpoints[0]}px)`}
                 type={`image/${format}`}
               />
-            ))}
-            <source
-              srcset={`${srcset[format]?.[srcset[format].length - 1]}`}
-              media={`(min-width: ${
-                breakpoints[breakpoints.length - 1] + 1
-              }px)`}
-              type={`image/${format}`}
-            />
-          </>
-        ))}
-        <img
-          class:list={["image", { "image--auto-size": autoSize }]}
-          style={{
-            ...style,
-            aspectRatio,
-          }}
-          alt={blok.alt ?? ""}
-          width={size.width}
-          height={size.height}
-          src={src}
-          loading={preload ? "eager" : "lazy"}
-          {...data}
-        />
-      </>
-    )
-  }
-</picture>
-
-<!-- Activate when dark mode is enable
-<svg style="width: 0; height: 0">
-  <filter id="darken">
-    <feColorMatrix
-      type="matrix"
-      values="0.75 0 0 0 0
-                0 0.75 0 0 0
-                0 0 0.75 0 0
-                0 0 0 1 0 "
-    ></feColorMatrix>
-  </filter>
-</svg> -->
+              {srcset[format]?.map((srcsetStr, index) => (
+                <source
+                  srcset={srcsetStr}
+                  media={`${`(min-width: ${
+                    breakpoints[index]
+                  }px) and (max-width: ${breakpoints[index + 1]}px)`}`}
+                  type={`image/${format}`}
+                />
+              ))}
+              <source
+                srcset={`${srcset[format]?.[srcset[format].length - 1]}`}
+                media={`(min-width: ${
+                  breakpoints[breakpoints.length - 1] + 1
+                }px)`}
+                type={`image/${format}`}
+              />
+            </>
+          ))}
+          <img
+            class:list={["image", { "image--auto-size": autoSize }]}
+            style={{
+              ...style,
+              aspectRatio,
+            }}
+            alt={blok.alt ?? ""}
+            width={size.width}
+            height={size.height}
+            src={src}
+            data-uuid={uuid}
+            loading={preload}
+            {...data}
+          />
+        </>
+      )
+    }
+  </picture>
+</astro-storyblok-image>
 
 <style lang="scss">
   @use "sass:math";
@@ -122,9 +141,36 @@ function createSrc(image: string, imageOptions: string): string {
     }
   }
 
-  // .dark-scheme {
-  //   .image:not(.image.image--photo-modal) {
-  //     filter: url(#darken);
-  //   }
-  // }
+  .loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    .circle {
+      width: 8px;
+      height: 8px;
+      background-color: var(--secondary);
+      border-radius: 50%;
+      animation: bounce 0.5s infinite alternate cubic-bezier(0.77, 0, 0.18, 1);
+    }
+    .circle:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .circle:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes bounce {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.5;
+      }
+    }
+  }
 </style>
