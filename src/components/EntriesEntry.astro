@@ -27,7 +27,7 @@ const { path } = Astro.params;
             >
               <StoryblokImage
                 blok={e}
-                preload={i < 3}
+                preload={i < 3 ? 'eager' : 'lazy'}
                 sizeList={[640, 768]}
                 style={{
                   maxHeight: "var(--maxHeight)",
