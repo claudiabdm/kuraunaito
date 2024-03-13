@@ -24,21 +24,10 @@ const { title, slug, seo } = Astro.props;
       href={styles}
     />
     <slot name="head" />
-
-    <style is:inline>
-      .body {
-        max-width: 1040px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: var(--space-xs-s) var(--space-s-l);
-        color: var(--primary);
-        font-size: var(--step-0);
-      }
-    </style>
   </head>
-  <body class="body">
+  <body>
     <TheHeader slug={slug} />
-    <main class="main">
+    <main>
       <slot />
     </main>
   </body>
