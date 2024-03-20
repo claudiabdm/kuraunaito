@@ -1,12 +1,32 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
-import Carousel from "astro-carousel";
+import { Carousel, Photo } from "astro-carousel";
 import Breadcrumbs from "./Breadcrumbs.astro";
-import StoryblokImage from "./StoryblokImage.astro";
+import type { ComponentProps } from "astro/types";
+import { getSize } from "../utils/functions";
 
 const { blok, breadcrumbs } = Astro.props;
 const { path } = Astro.params;
+
+const images: ComponentProps<typeof Carousel>["images"] = (
+  blok.entries ?? []
+).map((img) => ({
+  src: img.filename,
+  alt: img.alt ?? "",
+  width: getSize(img.filename).width,
+  widths: [360, 720, 1280],
+  height: getSize(img.filename).height,
+  format: "webp",
+}));
+const imagesGrid = images.map((img, i) => ({
+  ...img,
+  widths: [360, 540, 720],
+  loading: i < 3 ? "eager" : "lazy",
+  "data-carousel-index": i,
+}));
 ---
+
+<Carousel images={images} />
 
 <div class="entry">
   <Breadcrumbs breadcrumbs={breadcrumbs} />
@@ -16,60 +36,31 @@ const { path } = Astro.params;
     id="carouselTargetList"
   >
     {
-      blok.entries?.map((e, i) => {
+      imagesGrid.map((img, i) => {
         return (
           <li class="entry__elem">
             <a
               href={`/${path}?image=${i}`}
               data-carousel-index={i}
               class="entry__link"
-              aria-label={`Open image  ${e.name || i}`}
+              aria-label={`Open image ${img.title || i}`}
             >
-              <StoryblokImage
-                blok={e}
-                preload={i < 3 ? 'eager' : 'lazy'}
-                sizeList={[640, 768]}
-                style={{
-                  maxHeight: "var(--maxHeight)",
-                }}
-                data={{ "data-carousel-index": i }}
-              />
+              <Photo {...img} />
             </a>
           </li>
         );
       })
     }
   </ul>
-  <Carousel>
-    <ul id="slides" class="carousel__slides">
-      {
-        blok.entries?.map((img: any, i) => (
-          <li class:list={["carousel__slide"]}>
-            <StoryblokImage
-              blok={img}
-              sizeList={[2048]}
-              aspectRatio="1/1"
-              style={{
-                height: "auto",
-              }}
-              autoSize={false}
-              preload="lazy"
-            />
-          </li>
-        ))
-      }
-    </ul>
-  </Carousel>
 </div>
 
-<style lang="scss" define:vars={{ maxHeight: "620px" }} is:global>
+<style lang="scss" is:global>
   .entry {
     display: grid;
     gap: var(--space-s-m);
     padding-bottom: var(--space-s-m);
     &__entries {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
       gap: var(--space-m);
       margin: 0;
       padding: 0;
