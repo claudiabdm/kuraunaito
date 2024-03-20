@@ -245,14 +245,12 @@ export function formatDate(
   return date ? dtFormat.format(new Date(date)) : dtFormat.format(new Date());
 }
 
-export function getSize(filename?: string): { width: number; height: number } {
-  if (filename) {
-    const [width, height] = filename
-      .replace("https://a.storyblok.com/f/", "")
-      .split("/")[1]
-      .split("x");
-    return { width: Number(width), height: Number(height) };
-  }
+export function getSize(filename: string = ''): { width: number; height: number } {
+  const [width, height] = filename
+    .replace("https://a.storyblok.com/f/", "")
+    .split("/")[1]
+    .split("x");
+  return { width: Number(width), height: Number(height) };
 }
 
 export function getAspectRatio(entry): string {

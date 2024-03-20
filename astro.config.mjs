@@ -8,16 +8,23 @@ dotenv.config();
 const storyblokConfig =
   process.env.STORYBLOK_PREVIEW_ENABLED === "true"
     ? {
-        accessToken: process.env.STORYBLOK_PREVIEW,
-        bridge: true,
-      }
+      accessToken: process.env.STORYBLOK_PREVIEW,
+      bridge: true,
+    }
     : {
-        accessToken: process.env.STORYBLOK_PUBLISHED,
-        bridge: false,
-      };
+      accessToken: process.env.STORYBLOK_PUBLISHED,
+      bridge: false,
+    };
 // https://astro.build/config
 export default defineConfig({
   site: process.env.SITE,
+  image: {
+    domains: ["a.storyblok.com"],
+    service: {
+      entrypoint: './storyblok-image-service',
+      endpoint: `https://a.storyblok.com/f/${process.env.STORYBLOK_SPACE_ID}`, // https://www.storyblok.com/tp/optimize-your-storyblok-images-with-image-engine#structure-of-the-url-of-an-image
+    }
+  },
   integrations: [
     sitemap({
       i18n: {
