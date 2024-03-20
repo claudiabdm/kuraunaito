@@ -1,10 +1,10 @@
 ---
 import { t } from "i18next";
-import { getStoryLocalizedPath, getStories } from "../utils/functions";
+import { getStoryLocalizedPath, getStories, getSize } from "../utils/functions";
 import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
-import StoryblokImage from "./StoryblokImage.astro";
+import { Photo } from "astro-carousel";
 
 const { blok } = Astro.props;
 const { path } = Astro.params;
@@ -21,12 +21,12 @@ const storiesInRoot = stories
   .filter(
     (story) =>
       story !== root &&
-      story.full_slug.split("/").filter((s) => s).length === level + 1
+      story.full_slug.split("/").filter((s) => s).length === level + 1,
   )
   .sort(
     (a, b) =>
       new Date(b.content.from || new Date()).getTime() -
-      new Date(a.content.from || new Date()).getTime()
+      new Date(a.content.from || new Date()).getTime(),
   )
   .map((story) => ({
     ...story,
@@ -85,7 +85,10 @@ const breadcrumbs = blok.withHome
                 y2={i < storiesInRoot.length - 1 ? 50 : 25}
               />
             </svg>
-            <Link href={`/${s.path}`} ellipsis={true}>
+            <Link
+              href={`/${s.path}`}
+              ellipsis={true}
+            >
               <div class="linkList__name">{t(s.name)}</div>
               {t(s.name) != t("see-more") && (
                 <div class="linkList__date">
@@ -101,7 +104,15 @@ const breadcrumbs = blok.withHome
 
   {
     defaultImage && (
-      <StoryblokImage aspectRatio="4/5" blok={defaultImage} preload={true} />
+      <Photo
+        src={defaultImage.filename}
+        width={getSize(defaultImage.filename).width}
+        height={getSize(defaultImage.filename).height}
+        alt={blok.defaultImage.alt ?? ""}
+        widths={[360, 720]}
+        loading="eager"
+        class="container__photo"
+      />
     )
   }
 </div>
@@ -119,14 +130,6 @@ const breadcrumbs = blok.withHome
     &__nav {
       display: inline-block;
       justify-self: flex-start;
-    }
-
-    &__picture {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-      object-position: center;
     }
   }
 

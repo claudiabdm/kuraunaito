@@ -5,7 +5,7 @@ import Breadcrumbs from "./Breadcrumbs.astro";
 import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "storyblok-rich-text-astro-renderer/RichTextRenderer.astro";
 import Svg from "./Svg.astro";
-import StoryblokImage from "./StoryblokImage.astro";
+import { Photo } from "astro-carousel";
 
 const { path } = Astro.params;
 const { blok, breadcrumbs } = Astro.props;
@@ -14,7 +14,7 @@ const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
 const slugs = slugsArray?.map(
   (_, i) =>
     slugsArray.slice(0, i + 1).join("/") +
-    (i < slugsArray.length - 1 || i === 0 ? "/" : "")
+    (i < slugsArray.length - 1 || i === 0 ? "/" : ""),
 );
 
 const {
@@ -52,27 +52,48 @@ function calculateReadingTime(content: any[]) {
         <h3 class="blog__title">{blok.title}</h3>
         <div class="blog__metadata">
           <span>
-            <Svg name="date" aria-label="Last updated" size="14" />
-            <time datetime={currentStory?.published_at} class="blog__time"
+            <Svg
+              name="date"
+              aria-label="Last updated"
+              size="14"
+            />
+            <time
+              datetime={currentStory?.published_at}
+              class="blog__time"
               >{publishedAt}</time
             >
           </span>
           <span>
-            <Svg name="time" size="14" />
+            <Svg
+              name="time"
+              size="14"
+            />
             <time class="blog__time">{readingTime}</time>
             {t("minutes")}
           </span>
           <span>
-            <Svg name="person" aria-label="Written by" size="14" />
+            <Svg
+              name="person"
+              aria-label="Written by"
+              size="14"
+            />
             {blok.author}
           </span>
         </div>
         <p class="blog__intro">{blok.intro}</p>
         <div class="blog__image">
-          <StoryblokImage blok={blok.image} sizeList={[1234]} />
+          <Photo
+            src={blok.image.filename}
+            alt={blok.image.alt ?? ""}
+            widths={[360, 720, 1280]}
+            loading="eager"
+          />
         </div>
       </header>
-      <RichTextRenderer content={blok.article} {...storyblokEditable(blok)} />
+      <RichTextRenderer
+        content={blok.article}
+        {...storyblokEditable(blok)}
+      />
     </article>
   </section>
 </div>
