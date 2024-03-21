@@ -99,15 +99,15 @@ html:focus-within {
 /* Set core body defaults */
 body {
   min-height: 100vh;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
-
   max-width: 1040px;
   margin-left: auto;
   margin-right: auto;
   padding: var(--space-xs-s) var(--space-s-l);
   color: var(--primary);
-  font-size: var(--step-0);
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-rendering: optimizeSpeed;
 }
 
 /* Remove default style decoration for links */
@@ -153,10 +153,6 @@ select {
 /*
 Fonts
 */
-body {
-  font-family: "Roboto", sans-serif;
-}
-
 h1 {
   font-size: var(--step-2);
 }

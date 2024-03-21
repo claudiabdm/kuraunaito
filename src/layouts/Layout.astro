@@ -3,8 +3,11 @@ import i18next from "i18next";
 import styles from "../styles/global.css?url";
 import TheHeader from "../components/TheHeader.astro";
 import Meta from "../components/Meta.astro";
+import roboto400url from "@fontsource/roboto/files/roboto-latin-400-normal.woff2";
+import roboto700url from "@fontsource/roboto/files/roboto-latin-700-normal.woff2";
 
 const { title, slug, seo } = Astro.props;
+const fonts = [roboto400url, roboto700url];
 ---
 
 <!doctype html>
@@ -14,6 +17,17 @@ const { title, slug, seo } = Astro.props;
       meta={seo}
       title={title}
     />
+    {
+      fonts.map((url) => (
+        <link
+          rel="preload"
+          href={url}
+          as="font"
+          type="font/woff2"
+          crossorigin
+        />
+      ))
+    }
     <link
       rel="preload"
       as="style"
