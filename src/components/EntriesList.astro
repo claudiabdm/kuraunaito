@@ -1,10 +1,10 @@
 ---
 import { t } from "i18next";
-import { getStoryLocalizedPath, getStories, getSize } from "../utils/functions";
+import { getStoryLocalizedPath, getStories } from "../utils/functions";
 import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
-import { Photo } from "astro-carousel";
+import EntriesPhotoStack from "./EntriesPhotoStack.astro";
 
 const { blok } = Astro.props;
 const { path } = Astro.params;
@@ -33,6 +33,14 @@ const storiesInRoot = stories
     ...getStoryLocalizedPath(story, path),
   }));
 
+const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
+  const content = story.content.entries?.[0] ?? story.content.image;
+  if (content) {
+    acc[story.path] = content.filename;
+  }
+  return acc;
+}, {});
+
 // Add see more if limit is set
 const maxItems = Math.min(Number(blok.maxItems), storiesInRoot.length);
 const withLimit = maxItems && !isNaN(maxItems);
@@ -47,20 +55,25 @@ if (withLimit) {
   });
 }
 
-const defaultImage = blok.defaultImage.filename ? blok.defaultImage : null;
 const breadcrumbs = blok.withHome
   ? Astro.props.breadcrumbs
   : [getStoryLocalizedPath(root)];
 ---
 
-<div class:list={["container", { "container--cols": Boolean(defaultImage) }]}>
+<div class="container">
   <section class="container__nav">
     <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-    <ul class:list={["linkList", { "linkList--limit": withLimit }]}>
+    <ul
+      class:list={["linkList", { "linkList--limit": withLimit }]}
+      data-entry-list
+    >
       {
         storiesInRoot.map((s, i) => (
-          <li class="linkList__elem">
+          <li
+            class="linkList__elem"
+            data-photo-stack-filename-target={photos[s.path]}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -102,30 +115,16 @@ const breadcrumbs = blok.withHome
     </ul>
   </section>
 
-  {
-    defaultImage && (
-      <Photo
-        src={defaultImage.filename}
-        width={getSize(defaultImage.filename).width}
-        height={getSize(defaultImage.filename).height}
-        alt={blok.defaultImage.alt ?? ""}
-        widths={[360, 720]}
-        loading="eager"
-        class="container__photo"
-      />
-    )
-  }
+  <EntriesPhotoStack photos={photos} />
 </div>
 
 <style lang="scss">
   .container {
-    &--cols {
-      @media screen and (min-width: 732px) {
-        display: grid;
-        grid-template-columns: 0.75fr 1fr;
-        justify-items: flex-end;
-        gap: var(--space-3xl);
-      }
+    @media screen and (min-width: 732px) {
+      display: grid;
+      grid-template-columns: 0.75fr 1fr;
+      justify-items: flex-end;
+      gap: var(--space-3xl);
     }
     &__nav {
       display: inline-block;

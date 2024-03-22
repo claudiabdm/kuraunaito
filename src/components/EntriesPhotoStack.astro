@@ -1,0 +1,181 @@
+---
+import { Photo } from "astro-carousel";
+import { getSize } from "../utils/functions";
+
+interface Props {
+    photos: Record<string, string>;
+}
+const { photos } = Astro.props;
+---
+
+<script>
+    export class AstroPhotoStack extends HTMLElement {
+        constructor() {
+            super();
+            this._init();
+        }
+
+        _init() {
+            const photos = [...(this.children ?? [])].reduce((acc, curr) => {
+                acc[curr.dataset.photoStackFilename] = curr;
+                return acc;
+            }, {});
+
+            const entryLinks = Object.keys(photos).map((filename) =>
+                document.querySelector<HTMLElement>(
+                    `[data-photo-stack-filename-target="${filename}"]`,
+                ),
+            );
+
+            if (entryLinks) {
+                for (const elem of entryLinks) {
+                    this._addEventListeners(elem, photos);
+                }
+            }
+        }
+
+        _addEventListeners(
+            elem: HTMLElement,
+            photos: Record<string, HTMLElement>,
+        ) {
+            elem.addEventListener("mouseenter", _handleToggleClassShow);
+            elem.addEventListener("mouseleave", _handleToggleClassShow);
+
+            function _handleToggleClassShow(e: MouseEvent) {
+                if (e.target instanceof HTMLElement) {
+                    const filenameTarget =
+                        e.target.dataset.photoStackFilenameTarget;
+                    if (e.type === "mouseenter") {
+                        photos[filenameTarget].classList.add(
+                            "photo-stack__elem--show",
+                        );
+                        return;
+                    }
+                    if (e.type === "mouseleave") {
+                        photos[filenameTarget].classList.remove(
+                            "photo-stack__elem--show",
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    customElements.define("astro-photo-stack", AstroPhotoStack);
+</script>
+
+<astro-photo-stack
+    class="photo-stack"
+    data-photo-stack-photos={JSON.stringify(photos)}
+>
+    {
+        Object.entries(photos).map(
+            ([path, filename]) =>
+                path && (
+                    <div
+                        class="photo-stack__elem"
+                        data-photo-stack-filename={filename}
+                    >
+                        <Photo
+                            src={filename}
+                            width={getSize(filename).width}
+                            height={getSize(filename).height}
+                            alt=""
+                            widths={[360, 720]}
+                            loading="eager"
+                            class="container__photo"
+                        />
+                    </div>
+                ),
+        )
+    }
+</astro-photo-stack>
+
+<style lang="scss" define:vars={{ numOfPhotos: photos.length }}>
+    @use "sass:math";
+    .photo-stack {
+        position: relative;
+        display: grid;
+        place-content: start;
+        place-items: start;
+        margin: 0 20%;
+        min-width: 60%;
+        min-height: 80%;
+        aspect-ratio: 1 / 1;
+
+        @media screen and (min-width: 732px) {
+            margin: 0 0 0 0;
+            min-width: 80%;
+            min-height: 80%;
+        }
+
+        &__elem {
+            grid-row: 1;
+            grid-column: 1;
+            border: 4px solid #fff;
+            box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.5);
+            transition: transform 0.5s cubic-bezier(0.36, 0.07, 0.25, 1);
+
+            $numOfPhotos: var(--numOfPhotos);
+            $rotateInitial: rotate(0);
+            $rotate: rotate(0);
+            $translateInitial: translate3d(0, 0, 0);
+            $translate: translate3d(0, 0, 0);
+
+            @for $i from 1 through str-length($numOfPhotos) {
+                @if $i % 2 == 0 {
+                    $rotateInitial: rotate(#{$i + math.random()}deg);
+                    $rotate: rotate(-#{2 * $i + math.random()}deg);
+                    $translateInitial: translate3d(
+                        -#{10% + ($i + math.random())},
+                        #{20% + ($i + math.random())},
+                        0
+                    );
+                } @else {
+                    $rotateInitial: rotate(-#{$i + math.random()}deg);
+                    $rotate: rotate(#{2 * $i + math.random()}deg);
+                    $translateInitial: translate3d(
+                        #{10% + ($i + math.random())},
+                        -#{20% - ($i + math.random())},
+                        0
+                    );
+                }
+
+                &:nth-child(#{$i}) {
+                    transform: #{$translate} #{$rotate};
+                    animation: drop-#{$i}
+                        1s
+                        #{0.1 +
+                        ($i * 0.35)}s
+                        cubic-bezier(0.36, 0.07, 0.25, 1)
+                        backwards;
+
+                    @keyframes drop-#{$i} {
+                        0% {
+                            transform: #{$translateInitial} #{$rotateInitial};
+                            opacity: 0;
+                        }
+                        25% {
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: #{$translate} #{$rotate};
+                        }
+                    }
+                }
+
+                &--show:nth-child(#{$i}) {
+                    order: 1;
+                    z-index: 1;
+                    transform: translate3d(0, -20%, 0) #{$rotateInitial};
+                    transition: 0.5s cubic-bezier(0.36, 0.07, 0.25, 1);
+                    transition-property: transform, opacity;
+
+                    @media screen and (min-width: 732px) {
+                        transform: translate3d(-30%, -#{5% - ($i * 0.5)}, 0) #{$rotateInitial};
+                    }
+                }
+            }
+        }
+    }
+</style>
