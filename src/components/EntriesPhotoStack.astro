@@ -83,7 +83,10 @@ const { photos } = Astro.props;
                             alt=""
                             widths={[360, 720]}
                             loading="eager"
-                            class="container__photo"
+                            aspectRatio={
+                                getSize(filename).width /
+                                getSize(filename).height
+                            }
                         />
                     </div>
                 ),
@@ -96,23 +99,25 @@ const { photos } = Astro.props;
     .photo-stack {
         position: relative;
         display: grid;
-        place-content: start;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        place-content: space-around;
         place-items: start;
-        margin: 0 20%;
-        min-width: 60%;
-        min-height: 80%;
         aspect-ratio: 1 / 1;
 
         @media screen and (min-width: 732px) {
-            margin: 0 0 0 0;
-            min-width: 80%;
-            min-height: 80%;
+            grid-template-columns: 0.85fr;
+            grid-template-rows: 1fr;
+            min-width: 100%;
+            min-height: 90%;
         }
-
         &__elem {
+            min-width: 100%;
+            min-height: auto;
             grid-row: 1;
             grid-column: 1;
             border: 4px solid #fff;
+            background-color: #fff;
             box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.5);
             transition: transform 0.5s cubic-bezier(0.36, 0.07, 0.25, 1);
 
@@ -127,52 +132,32 @@ const { photos } = Astro.props;
                     $rotateInitial: rotate(#{$i + math.random()}deg);
                     $rotate: rotate(-#{2 * $i + math.random()}deg);
                     $translateInitial: translate3d(
-                        -#{10% + ($i + math.random())},
-                        #{20% + ($i + math.random())},
+                        -#{1% + ($i + math.random())},
+                        #{2% + ($i + math.random())},
                         0
                     );
                 } @else {
                     $rotateInitial: rotate(-#{$i + math.random()}deg);
                     $rotate: rotate(#{2 * $i + math.random()}deg);
                     $translateInitial: translate3d(
-                        #{10% + ($i + math.random())},
-                        -#{20% - ($i + math.random())},
+                        #{1% + ($i + math.random())},
+                        -#{2% - ($i + math.random())},
                         0
                     );
                 }
 
                 &:nth-child(#{$i}) {
                     transform: #{$translate} #{$rotate};
-                    animation: drop-#{$i}
-                        1s
-                        #{0.1 +
-                        ($i * 0.35)}s
-                        cubic-bezier(0.36, 0.07, 0.25, 1)
-                        backwards;
-
-                    @keyframes drop-#{$i} {
-                        0% {
-                            transform: #{$translateInitial} #{$rotateInitial};
-                            opacity: 0;
-                        }
-                        25% {
-                            opacity: 1;
-                        }
-                        100% {
-                            transform: #{$translate} #{$rotate};
-                        }
-                    }
                 }
 
                 &--show:nth-child(#{$i}) {
-                    order: 1;
                     z-index: 1;
                     transform: translate3d(0, -20%, 0) #{$rotateInitial};
-                    transition: 0.5s cubic-bezier(0.36, 0.07, 0.25, 1);
+                    transition: 0.35s cubic-bezier(0.36, 0.07, 0.25, 1);
                     transition-property: transform, opacity;
 
                     @media screen and (min-width: 732px) {
-                        transform: translate3d(-30%, -#{5% - ($i * 0.5)}, 0) #{$rotateInitial};
+                        transform: translate3d(-30%, -#{10% - ($i * 0.5)}, 0) #{$rotateInitial};
                     }
                 }
             }
