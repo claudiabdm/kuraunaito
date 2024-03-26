@@ -31,6 +31,7 @@ const storiesInRoot = stories
   .map((story) => ({
     ...story,
     ...getStoryLocalizedPath(story, path),
+    name: story.content.seo.title ?? story.name,
   }));
 
 // Add see more if limit is set
@@ -54,7 +55,6 @@ const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
   }
   return acc;
 }, {});
-
 
 const breadcrumbs = blok.withHome
   ? Astro.props.breadcrumbs
@@ -156,10 +156,6 @@ const breadcrumbs = blok.withHome
       height: 48px;
       align-items: center;
       gap: 0 var(--space-3xs);
-    }
-
-    &__name:first-letter {
-      text-transform: uppercase;
     }
 
     &__date {
