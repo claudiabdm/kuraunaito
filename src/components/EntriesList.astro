@@ -33,14 +33,6 @@ const storiesInRoot = stories
     ...getStoryLocalizedPath(story, path),
   }));
 
-const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
-  const content = story.content.entries?.[0] ?? story.content.image;
-  if (content) {
-    acc[story.path] = content.filename;
-  }
-  return acc;
-}, {});
-
 // Add see more if limit is set
 const maxItems = Math.min(Number(blok.maxItems), storiesInRoot.length);
 const withLimit = maxItems && !isNaN(maxItems);
@@ -54,6 +46,15 @@ if (withLimit) {
     name: t("see-more"),
   });
 }
+
+const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
+  const content = story.content.entries?.[0] ?? story.content.image;
+  if (content) {
+    acc[story.path] = content.filename;
+  }
+  return acc;
+}, {});
+
 
 const breadcrumbs = blok.withHome
   ? Astro.props.breadcrumbs
