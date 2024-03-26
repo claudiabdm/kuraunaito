@@ -16,8 +16,12 @@ const { photos } = Astro.props;
         }
 
         _init() {
-            const photos = [...(this.children ?? [])].reduce((acc, curr) => {
-                acc[curr.dataset.photoStackFilename] = curr;
+            const photos = [...(this.children ?? [])].reduce<
+                Record<string, HTMLElement>
+            >((acc, curr) => {
+                if (curr instanceof HTMLElement) {
+                    acc[curr.dataset.photoStackFilename] = curr;
+                }
                 return acc;
             }, {});
 
@@ -99,17 +103,21 @@ const { photos } = Astro.props;
     .photo-stack {
         position: relative;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 0.85fr;
         grid-template-rows: auto;
-        place-content: space-around;
-        place-items: start;
+        justify-content: center;
+        align-items: start;
         aspect-ratio: 1 / 1;
+        margin-top: var(--space-l);
+        margin-bottom: var(--space-l);
 
         @media screen and (min-width: 732px) {
-            grid-template-columns: 0.85fr;
             grid-template-rows: 1fr;
+            place-content: space-around;
+            place-items: start;
             min-width: 100%;
             min-height: 90%;
+            margin-bottom: 0;
         }
         &__elem {
             min-width: 100%;
