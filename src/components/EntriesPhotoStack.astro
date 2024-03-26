@@ -10,6 +10,8 @@ const { photos } = Astro.props;
 
 <script>
     export class AstroPhotoStack extends HTMLElement {
+        lastTarget: string = null;
+
         constructor() {
             super();
             this._init();
@@ -49,16 +51,25 @@ const { photos } = Astro.props;
                 if (e.target instanceof HTMLElement) {
                     const filenameTarget =
                         e.target.dataset.photoStackFilenameTarget;
+                    const photoElem = photos[filenameTarget];
                     if (e.type === "mouseenter") {
-                        photos[filenameTarget].classList.add(
-                            "photo-stack__elem--show",
-                        );
-                        return;
+                        photoElem.classList.add("photo-stack__elem--show");
                     }
                     if (e.type === "mouseleave") {
-                        photos[filenameTarget].classList.remove(
-                            "photo-stack__elem--show",
-                        );
+                        const animations = photoElem.getAnimations();
+                        if (animations.length < 1) {
+                            photoElem.classList.remove(
+                                "photo-stack__elem--show",
+                            );
+                        } else {
+                            animations.forEach((a) => {
+                                a.onfinish = function finish() {
+                                    photoElem.classList.remove(
+                                        "photo-stack__elem--show",
+                                    );
+                                };
+                            });
+                        }
                     }
                 }
             }
