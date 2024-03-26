@@ -1,6 +1,6 @@
 ---
 import i18next, { t } from "i18next";
-import { formatDate, getStories } from "../utils/functions";
+import { formatDate, getSize, getStories } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "storyblok-rich-text-astro-renderer/RichTextRenderer.astro";
@@ -57,6 +57,7 @@ function calculateReadingTime(content: any[]) {
               aria-label="Last updated"
               size="14"
             />
+            {t("last-updated")}
             <time
               datetime={currentStory?.published_at}
               class="blog__time"
@@ -84,8 +85,12 @@ function calculateReadingTime(content: any[]) {
         <div class="blog__image">
           <Photo
             src={blok.image.filename}
+            width={getSize(blok.image.filename).width}
+            height={getSize(blok.image.filename).height}
             alt={blok.image.alt ?? ""}
             widths={[360, 720, 1280]}
+            aspectRatio={getSize(blok.image.filename).width /
+              getSize(blok.image.filename).height}
             loading="eager"
           />
         </div>
