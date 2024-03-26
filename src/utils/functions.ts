@@ -225,10 +225,10 @@ export function getStoryLocalizedPath(
   };
 }
 
-export function getDate(fromDate?: string, toDate: string = fromDate) {
+export function getDate(fromDate: string, toDate?: string) {
   const from = formatDate(fromDate);
   const to = formatDate(toDate);
-  const dateField = from == to ? from : `${from} - ${to}`;
+  const dateField = (toDate == null || toDate == '') ? from : `${from} - ${to}`;
   return dateField;
 }
 
