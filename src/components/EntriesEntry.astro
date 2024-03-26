@@ -14,7 +14,7 @@ const images: ComponentProps<typeof Carousel>["images"] = (
   src: img.filename,
   alt: img.alt ?? "",
   width: getSize(img.filename).width,
-  widths: [360, 720, 1280],
+  widths: [720, 1280, getSize(img.filename).width],
   height: getSize(img.filename).height,
   format: "webp",
 }));
@@ -81,7 +81,7 @@ const imagesGrid = images.map((img, i) => ({
       animation: fade-out 0.5s cubic-bezier(0.36, 0.07, 0.25, 1) backwards;
       transition: 0.25s cubic-bezier(0.36, 0.07, 0.25, 1);
       transition-property: transform, box-shadow;
-      
+
       $numOfPhotos: var(--numOfPhotos, 1);
       @for $i from 1 through str-length($numOfPhotos) {
         &:nth-child(#{$i}) {
