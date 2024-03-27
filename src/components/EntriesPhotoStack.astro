@@ -52,11 +52,17 @@ const { photos } = Astro.props;
                     const filenameTarget =
                         e.target.dataset.photoStackFilenameTarget;
                     const photoElem = photos[filenameTarget];
+                    const animations = photoElem.getAnimations();
                     if (e.type === "mouseenter") {
+                        photoElem.classList.add("photo-stack__elem--up");
                         photoElem.classList.add("photo-stack__elem--show");
+                        Object.entries(photos).forEach(([_, el]) => {
+                            if (el !== photoElem) {
+                                el.classList.remove("photo-stack__elem--up");
+                            }
+                        });
                     }
                     if (e.type === "mouseleave") {
-                        const animations = photoElem.getAnimations();
                         if (animations.length < 1) {
                             photoElem.classList.remove(
                                 "photo-stack__elem--show",
@@ -169,8 +175,10 @@ const { photos } = Astro.props;
                     transform: #{$translate} #{$rotate};
                 }
 
-                &--show:nth-child(#{$i}) {
+                &--up:nth-child(#{$i}) {
                     z-index: 1;
+                }
+                &--show:nth-child(#{$i}) {
                     transform: translate3d(0, -20%, 0) #{$rotateInitial};
                     transition: 0.35s cubic-bezier(0.36, 0.07, 0.25, 1);
                     transition-property: transform, opacity;
