@@ -26,6 +26,26 @@ const imagesGrid = images.map((img, i) => ({
 }));
 ---
 
+<script>
+  import { animate, inView } from "motion";
+  inView(
+    ".entry__elem",
+    ({ target }) => {
+      animate(
+        target,
+        {
+          opacity: 1,
+          transform: ["translate3d(0, 5%, 0)", "translate3d(0, 0, 0)"],
+        },
+        { delay: 0.1, duration: 0.75, easing: [0.36, 0.07, 0.25, 1] },
+      );
+    },
+    {
+      amount: 0.5,
+    },
+  );
+</script>
+
 <Carousel images={images} />
 
 <div class="entry">
@@ -39,14 +59,16 @@ const imagesGrid = images.map((img, i) => ({
       imagesGrid.map((img, i) => {
         return (
           <li class="entry__elem">
-            <a
-              href={`/${path}?image=${i}`}
-              data-carousel-index={i}
-              class="entry__link"
-              aria-label={`Open image ${img.title || i}`}
-            >
-              <Photo {...img} />
-            </a>
+            <div class="entry__elem-hover">
+              <a
+                href={`/${path}?image=${i}`}
+                data-carousel-index={i}
+                class="entry__link"
+                aria-label={`Open image ${img.title || i}`}
+              >
+                <Photo {...img} />
+              </a>
+            </div>
           </li>
         );
       })
@@ -76,34 +98,18 @@ const imagesGrid = images.map((img, i) => ({
     }
 
     &__elem {
-      border: 8px solid #fff;
-      box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.25);
-      animation: fade-out 0.5s cubic-bezier(0.36, 0.07, 0.25, 1) backwards;
-      transition: 0.25s cubic-bezier(0.36, 0.07, 0.25, 1);
-      transition-property: transform, box-shadow;
+      opacity: 0;
 
-      $numOfPhotos: var(--numOfPhotos, 1);
-      @for $i from 1 through str-length($numOfPhotos) {
-        &:nth-child(#{$i}) {
-          animation-delay: #{($i * 0.25)}s;
+      &-hover {
+        border: 8px solid #fff;
+        box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.25);
+        transition: 0.25s cubic-bezier(0.36, 0.07, 0.25, 1);
+        transition-property: transform, box-shadow;
+        &:hover {
+          cursor: pointer;
+          box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.5);
+          transform: translate3d(0, -2%, 0);
         }
-      }
-      @keyframes fade-out {
-        0% {
-          opacity: 0;
-          transform: translate3d(0, -5%, 0);
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          transform: translate3d(0, 0, 0);
-        }
-      }
-      &:hover {
-        cursor: pointer;
-        box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.5);
-        transform: translate3d(0, -2%, 0);
       }
     }
 
