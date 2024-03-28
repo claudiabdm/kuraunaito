@@ -1,0 +1,51 @@
+---
+import { t } from "i18next";
+import Layout from "../layouts/Layout.astro";
+import Link from "../components/Link.astro";
+---
+
+<Layout
+    slug=""
+    seo={{}}
+    title={`Error 404: ${t("page-not-found")}`}
+>
+    <section class="not-found">
+        <div class="not-found__icon">💩</div>
+        <h2 class="not-found__title">Error 404: {t("page-not-found")}</h2>
+        <p class="not-found__msg">
+            {t("page-not-found-msg")}
+            <Link
+                href={process.env.SITE}
+                class="not-found__link"
+                >{process.env.SITE.replace("https://", "")}</Link
+            >
+        </p>
+    </section>
+
+    <style lang="scss">
+        .not-found {
+            text-align: center;
+
+            &__icon {
+                font-size: var(--step-5);
+            }
+
+            &__title {
+                font-size: var(--step-5);
+                margin-bottom: var(--space-l);
+            }
+
+            &__msg {
+                margin: auto;
+                max-width: 50ch;
+                font-size: var(--step-1);
+            }
+
+            :global(.not-found__link) {
+                display: block;
+                font-weight: 700;
+                margin-top: var(--space-l);
+            }
+        }
+    </style>
+</Layout>

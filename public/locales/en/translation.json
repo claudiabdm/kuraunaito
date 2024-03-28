@@ -3,5 +3,7 @@
   "photos": "photos",
   "see-more": "See more...",
   "last-updated": "Last updated on",
-  "minutes": "min read"
+  "minutes": "min read",
+  "page-not-found": "Page not found",
+  "page-not-found-msg": "Oops something went wrong and the page could not be found but you can always go back to the main page :)"
 }
