@@ -1,4 +1,7 @@
 ---
+import { t } from "i18next";
+import { getImage } from "astro:assets";
+
 const { meta, title } = Astro.props;
 
 const capitalizeTitle = (meta?.title || title || "")
@@ -6,8 +9,10 @@ const capitalizeTitle = (meta?.title || title || "")
   .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1))
   .join(" ");
 const defaultTitle = capitalizeTitle;
-const defaultDescription = meta?.description || defaultTitle;
-const defaultImage = meta?.image || "";
+const defaultDescription = meta?.description || t("description");
+const defaultImage = meta?.image
+  ? (await getImage({ src: meta.image, width: 1280 }))?.src
+  : "";
 const defaultAlt = meta?.alt || defaultTitle;
 const metaTags = [
   { name: "title", content: defaultTitle },
@@ -46,8 +51,14 @@ const metaTags = [
 
 <>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width" />
-  <meta name="generator" content={Astro.generator} />
+  <meta
+    name="viewport"
+    content="width=device-width"
+  />
+  <meta
+    name="generator"
+    content={Astro.generator}
+  />
   <title>{capitalizeTitle}</title>
   {
     metaTags.map((meta) => {
