@@ -90,7 +90,7 @@ const { photos } = Astro.props;
 >
     {
         Object.entries(photos).map(
-            ([path, filename]) =>
+            ([path, filename], index, arr) =>
                 path && (
                     <div
                         class="photo-stack__elem"
@@ -101,8 +101,8 @@ const { photos } = Astro.props;
                             width={getSize(filename).width}
                             height={getSize(filename).height}
                             alt=""
-                            widths={[360, 720]}
-                            loading="eager"
+                            widths={[360, 600]}
+                            loading={index < 3 ? "eager" : "lazy"}
                             aspectRatio={
                                 getSize(filename).width /
                                 getSize(filename).height
@@ -157,7 +157,7 @@ const { photos } = Astro.props;
             @for $i from 1 through str-length($numOfPhotos) {
                 @if $i % 2 == 0 {
                     $rotateInitial: rotate(#{$i + math.random()}deg);
-                    $rotate: rotate(-#{2 * $i + math.random()}deg);
+                    $rotate: rotate(-#{0.5 * $i + math.random()}deg);
                     $translateInitial: translate3d(
                         -#{1% + ($i + math.random())},
                         #{2% + ($i + math.random())},
@@ -165,7 +165,7 @@ const { photos } = Astro.props;
                     );
                 } @else {
                     $rotateInitial: rotate(-#{$i + math.random()}deg);
-                    $rotate: rotate(#{2 * $i + math.random()}deg);
+                    $rotate: rotate(#{0.5 * $i + math.random()}deg);
                     $translateInitial: translate3d(
                         #{1% + ($i + math.random())},
                         -#{2% - ($i + math.random())},
