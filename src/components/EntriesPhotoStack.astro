@@ -119,15 +119,15 @@ const { photos } = Astro.props;
     .photo-stack {
         position: relative;
         display: grid;
-        grid-template-columns: 0.85fr;
+        grid-template-columns: 0.5fr;
         grid-template-rows: auto;
         justify-content: center;
         align-items: start;
         aspect-ratio: 1 / 1;
         margin-top: var(--space-xl);
-        margin-bottom: var(--space-l);
 
         @media screen and (min-width: 732px) {
+            grid-template-columns: 0.85fr;
             justify-content: end;
             align-content: space-between;
             align-items: center;
