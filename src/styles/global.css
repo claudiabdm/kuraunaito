@@ -108,6 +108,7 @@ body {
   font-size: 1rem;
   line-height: 1.5;
   text-rendering: optimizeSpeed;
+  overflow-x: hidden;
 }
 
 /* Remove default style decoration for links */
