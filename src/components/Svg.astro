@@ -1,7 +1,5 @@
 ---
-import sprite from "../icons/sprite.svg?url";
-
-const { name, description, size, height } = Astro.props;
+const { name, description, size } = Astro.props;
 ---
 
 <svg
@@ -10,5 +8,5 @@ const { name, description, size, height } = Astro.props;
   width={size}
   height={size}
 >
-  <use href={`${sprite}#${name}`}></use>
+  <use href={`/sprite.svg#${name}`}></use>
 </svg>
