@@ -22,14 +22,14 @@ const { photos } = Astro.props;
                 Record<string, HTMLElement>
             >((acc, curr) => {
                 if (curr instanceof HTMLElement) {
-                    acc[curr.dataset.photoStackFilename] = curr;
+                    acc[curr.dataset.photoStackPath] = curr;
                 }
                 return acc;
             }, {});
 
-            const entryLinks = Object.keys(photos).map((filename) =>
+            const entryLinks = Object.keys(photos).map((path) =>
                 document.querySelector<HTMLElement>(
-                    `[data-photo-stack-filename-target="${filename}"]`,
+                    `[data-photo-stack-path-target="${path}"]`,
                 ),
             );
 
@@ -49,9 +49,9 @@ const { photos } = Astro.props;
 
             function _handleToggleClassShow(e: MouseEvent) {
                 if (e.target instanceof HTMLElement) {
-                    const filenameTarget =
-                        e.target.dataset.photoStackFilenameTarget;
-                    const photoElem = photos[filenameTarget];
+                    const pathTarget =
+                        e.target.dataset.photoStackPathTarget;
+                    const photoElem = photos[pathTarget];
                     const animations = photoElem.getAnimations();
                     if (e.type === "mouseenter") {
                         photoElem.classList.add("photo-stack__elem--up");
@@ -95,7 +95,7 @@ const { photos } = Astro.props;
                 path && (
                     <div
                         class="photo-stack__elem"
-                        data-photo-stack-filename={filename}
+                        data-photo-stack-path={path}
                     >
                         <Photo
                             src={filename}
