@@ -18,6 +18,12 @@ const storyblokConfig =
 // https://astro.build/config
 export default defineConfig({
   site: process.env.SITE,
+  prefetch: {
+    prefetchAll: true
+  },
+  build: {
+    inlineStylesheets: 'auto'
+  },
   image: {
     domains: ["a.storyblok.com"],
     service: {

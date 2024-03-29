@@ -1,6 +1,6 @@
 ---
 import i18next from "i18next";
-import styles from "../styles/global.css?url";
+import "../styles/global.css";
 import TheHeader from "../components/TheHeader.astro";
 import Meta from "../components/Meta.astro";
 import roboto400url from "@fontsource/roboto/files/roboto-latin-400-normal.woff2";
@@ -28,15 +28,6 @@ const fonts = [roboto400url, roboto700url];
         />
       ))
     }
-    <link
-      rel="preload"
-      as="style"
-      href={styles}
-    />
-    <link
-      rel="stylesheet"
-      href={styles}
-    />
     <slot name="head" />
   </head>
   <body>
