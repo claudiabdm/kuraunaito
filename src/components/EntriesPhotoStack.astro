@@ -49,8 +49,7 @@ const { photos } = Astro.props;
 
             function _handleToggleClassShow(e: MouseEvent) {
                 if (e.target instanceof HTMLElement) {
-                    const pathTarget =
-                        e.target.dataset.photoStackPathTarget;
+                    const pathTarget = e.target.dataset.photoStackPathTarget;
                     const photoElem = photos[pathTarget];
                     const animations = photoElem.getAnimations();
                     if (e.type === "mouseenter") {
@@ -125,7 +124,7 @@ const { photos } = Astro.props;
         justify-content: center;
         align-items: start;
         aspect-ratio: 1 / 1;
-        margin-top: var(--space-l);
+        margin-top: var(--space-xl);
         margin-bottom: var(--space-l);
 
         @media screen and (min-width: 732px) {
@@ -182,12 +181,13 @@ const { photos } = Astro.props;
                     z-index: 1;
                 }
                 &--show:nth-child(#{$i}) {
-                    transform: translate3d(0, -20%, 0) #{$rotateInitial};
+                    transform: translate3d(0, -20%, 0) rotate(0);
                     transition: 0.35s cubic-bezier(0.36, 0.07, 0.25, 1);
                     transition-property: transform, opacity;
 
                     @media screen and (min-width: 732px) {
-                        transform: translate3d(-30%, -#{10% - ($i * 0.5)}, 0) #{$rotateInitial};
+                        transform: translate3d(-30%, -#{10% - ($i * 0.5)}, 0)
+                            rotate(0);
                     }
                 }
             }
