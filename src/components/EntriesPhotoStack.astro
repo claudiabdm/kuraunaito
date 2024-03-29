@@ -102,11 +102,12 @@ const { photos } = Astro.props;
                             height={getSize(filename).height}
                             alt=""
                             widths={[360, 600]}
-                            loading={index < 3 ? "eager" : "lazy"}
+                            loading="eager"
                             aspectRatio={
                                 getSize(filename).width /
                                 getSize(filename).height
                             }
+                            quality={70}
                         />
                     </div>
                 ),
