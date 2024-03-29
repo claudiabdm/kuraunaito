@@ -31,7 +31,7 @@ const storiesInRoot = stories
   .map((story) => ({
     ...story,
     ...getStoryLocalizedPath(story, path),
-    name: story.content.seo.title ?? story.name,
+    name: story.content.seo?.title ?? story.name,
   }));
 
 // Add see more if limit is set
@@ -120,7 +120,17 @@ const breadcrumbs = blok.withHome
 </div>
 
 <style lang="scss">
+  $padding-y-body: calc(#{var(--space-xs-s)} + #{var(--space-xs-s)});
+  $nav-height: var(--step-2);
+  $margin-top-header: var(--space-xl-2xl);
+  $breadcrumbs-height: var(--step-2);
+  $max-height: calc(
+    100vh - $padding-y-body - $nav-height - $margin-top-header -
+      $breadcrumbs-height - $breadcrumbs-height
+  );
+
   .container {
+    --max-height: #{$max-height};
     @media screen and (min-width: 732px) {
       display: grid;
       grid-template-columns: 0.75fr 1fr;
@@ -139,7 +149,7 @@ const breadcrumbs = blok.withHome
     list-style: none;
 
     @media screen and (min-width: 732px) {
-      height: var(--max-height);
+      max-height: var(--max-height);
       overflow: hidden;
       &:hover {
         overflow: auto;
