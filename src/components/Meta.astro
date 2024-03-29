@@ -11,7 +11,7 @@ const capitalizeTitle = (meta?.title || title || "")
 const defaultTitle = capitalizeTitle;
 const defaultDescription = meta?.description || t("description");
 const defaultImage = meta?.image
-  ? (await getImage({ src: meta.image, width: 1280 }))?.src
+  ? (await getImage({ src: meta.image, width: 1280, height: 0 }))?.src
   : "";
 const defaultAlt = meta?.alt || defaultTitle;
 const metaTags = [
