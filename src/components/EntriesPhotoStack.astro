@@ -130,6 +130,8 @@ const { photos } = Astro.props;
 
         @media screen and (min-width: 732px) {
             grid-template-rows: 1fr;
+            justify-content: end;
+            justify-items: end;
             place-items: start;
             min-width: 100%;
             min-height: 90%;
@@ -137,7 +139,7 @@ const { photos } = Astro.props;
             margin-top: 0;
         }
         &__elem {
-            width: 100%;
+            width: 80%;
             min-height: auto;
             grid-row: 1;
             grid-column: 1;
