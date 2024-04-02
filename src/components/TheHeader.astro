@@ -21,7 +21,8 @@ const {
 
 // Formatted links
 function langPath(l) {
-  const root = slug.split("/")[0];
+  let root = slug.split("/")[0];
+  if (root === 'home') return l;
   return `/${l}/${slug.replace(root, t(root, { lng: l }))}`;
 }
 const links = getStoriesLocalizedPath(stories, path);
@@ -52,7 +53,7 @@ const links = getStoriesLocalizedPath(stories, path);
     <!-- Languages -->
     <section class="nav__group nav__group--lang" translate="no">
       {
-        LANGUAGES.filter((l) => l !== "").map((l, i, list) => (
+        LANGUAGES.map((l, i, list) => (
           <>
             <Link href={langPath(l)} inactive={i18next.language !== l}>
               {l}
