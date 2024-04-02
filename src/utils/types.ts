@@ -40,7 +40,7 @@ export interface Breadcrumb {
   name: string;
 }
 
-export const LANGUAGES = ["en", "es", ""] as const;
+export const LANGUAGES = ["en", "es"] as const;
 
 export type Language = (typeof LANGUAGES)[number];
 

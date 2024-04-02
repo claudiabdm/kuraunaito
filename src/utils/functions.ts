@@ -14,7 +14,7 @@ const DEFAULT_PATH: {
 } = {
   default: {
     params: {
-      path: undefined,
+      path: '',
     },
     props: {
       title: "home",
@@ -23,7 +23,7 @@ const DEFAULT_PATH: {
       breadcrumbs: [
         {
           path: "",
-          name: t("home", { lng: "" }),
+          name: t("home", { lng: "en" }),
         },
       ],
     },
