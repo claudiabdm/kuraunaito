@@ -54,6 +54,7 @@ export default defineConfig({
         rows: "components/Rows",
         spline: "components/Spline",
         blogPost: "components/BlogPost",
+        aboutPhoto: "components/AboutPhoto",
       },
     }),
     astroI18next(),
