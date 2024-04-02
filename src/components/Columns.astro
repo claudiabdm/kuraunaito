@@ -23,6 +23,7 @@ const { blok } = Astro.props;
   .column {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-xl);
 
     @media screen and (min-width: 732px) {
       grid-template-columns: var(
