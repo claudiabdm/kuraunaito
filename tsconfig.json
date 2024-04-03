@@ -2,5 +2,13 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "strict": false,
+    "types": [
+      "astro/client",
+      "@vite-pwa/astro",
+      "vite-plugin-pwa/client",
+      "vite-plugin-pwa/info",
+      "vite-plugin-pwa/pwa-assets",
+      "vite-plugin-pwa/vanillajs"
+    ]
   }
 }

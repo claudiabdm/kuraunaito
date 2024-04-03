@@ -2,6 +2,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import storyblok from "@storyblok/astro";
 import astroI18next from "astro-i18next";
+import AstroPWA from '@vite-pwa/astro';
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -58,5 +59,15 @@ export default defineConfig({
       },
     }),
     astroI18next(),
+    AstroPWA({
+      manifest: {
+        name: 'Kuraunaito',
+        short_name: 'Kuraunaito',
+        theme_color: '#ffffff',
+      },
+      pwaAssets: {
+        config: true
+      }
+    }),
   ],
 });
