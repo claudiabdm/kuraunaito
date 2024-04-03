@@ -22,17 +22,27 @@ const {
 // Formatted links
 function langPath(l) {
   let root = slug.split("/")[0];
-  if (root === 'home') return l;
-  return `/${l}/${slug.replace(root, t(root, { lng: l }))}`;
+  const slugLocalized = slug
+    .replace(root, t(root, { lng: l }))
+    .replace(t("home", { lng: l }), "");
+  return l !== "en"
+    ? `/${l}/${slugLocalized}`
+    : `/${slugLocalized.replace("home", "")}`;
 }
-const links = getStoriesLocalizedPath(stories, path);
+const links = getStoriesLocalizedPath(stories);
 ---
 
 <header class="header">
   <nav class="nav">
     <!-- Home -->
-    <h1 class="nav__home" translate="no">
-      <Link href={`/${i18next.language == "es" ? "es" : ""}`} first={true}>
+    <h1
+      class="nav__home"
+      translate="no"
+    >
+      <Link
+        href={`/${i18next.language == "es" ? "es" : ""}`}
+        first={true}
+      >
         クラウナイト
       </Link>
     </h1>
@@ -41,8 +51,11 @@ const links = getStoriesLocalizedPath(stories, path);
     {
       links?.length > 1 && (
         <section class="nav__group">
-          {links?.map((l, i) => (
-            <Link href={`/${l.path}`} inactive={!String(path).includes(l.name)}>
+          {links?.map((l) => (
+            <Link
+              href={`/${l.path.replace(t("home"), "")}`}
+              inactive={!slug.includes(`${l.slug}`)}
+            >
               {l.name}
             </Link>
           ))}
@@ -51,11 +64,17 @@ const links = getStoriesLocalizedPath(stories, path);
     }
 
     <!-- Languages -->
-    <section class="nav__group nav__group--lang" translate="no">
+    <section
+      class="nav__group nav__group--lang"
+      translate="no"
+    >
       {
         LANGUAGES.map((l, i, list) => (
           <>
-            <Link href={langPath(l)} inactive={i18next.language !== l}>
+            <Link
+              href={langPath(l)}
+              inactive={i18next.language !== l}
+            >
               {l}
             </Link>
             {i < list.length - 1 && <hr class="lang-divider" />}
@@ -68,7 +87,7 @@ const links = getStoriesLocalizedPath(stories, path);
 
 <style lang="scss">
   .header {
-    margin-bottom: var(--space-xl-2xl);
+    margin-bottom: var(--space-l-xl);
     text-transform: capitalize;
   }
   .nav {
@@ -78,7 +97,7 @@ const links = getStoriesLocalizedPath(stories, path);
       "title lang"
       "nav nav";
     justify-items: end;
-    
+
     @media screen and (min-width: 732px) {
       grid-template-areas: "title nav lang";
       align-items: center;

@@ -62,17 +62,18 @@ function massageLink(
 
   if (lang) {
     const path = `${lang}/${link.slug.replace(root, t(root, { lng: lang }))}`;
+    const localizedName = t(link.name.toLowerCase().replace(' ', '-'), { lng: lang }).replace('-', ' ');
     return {
       params: { path },
       props: {
-        title: t(link.name, { lng: lang }),
+        title: localizedName,
         slug: `${link.slug}${link.is_folder ? "/" : ""}`,
         lang: lang,
         breadcrumbs: [
           ...breadcrumbs,
           {
             path,
-            name: t(link.name.toLowerCase(), { lng: lang }),
+            name: localizedName,
           },
         ],
       },
@@ -135,8 +136,10 @@ export async function generatePathsFromStories() {
     links.push(parent.default);
 
     for (const lang of LANGUAGES) {
-      links.push(parent[lang]);
-      links.push(...massageLinks(dataLinks, lang));
+      if (lang !== 'en') {
+        links.push(parent[lang]);
+        links.push(...massageLinks(dataLinks, lang));
+      }
     }
 
     return links;
@@ -205,23 +208,23 @@ export function getToken() {
 
 export function getStoriesLocalizedPath(
   stories: any[],
-  rootPath?: string
 ): Breadcrumb[] {
-  return stories.map((s) => getStoryLocalizedPath(s, rootPath));
+  return stories.map((s) => getStoryLocalizedPath(s));
 }
 
 export function getStoryLocalizedPath(
   story: any,
-  rootPath?: string
 ): Breadcrumb {
   const folder =
     story.lang === "default"
       ? story.full_slug.split("/")[0]
       : story.full_slug.split("/")[1];
   const localizedPath = story.full_slug.replace(folder, t(folder));
+  const localizeName = t(story.name.toLowerCase().replace(' ', '-'));
   return {
-    path: rootPath?.startsWith("en") ? "en/" + localizedPath : localizedPath,
-    name: t(story.name.toLowerCase() || story.slug),
+    path: localizedPath,
+    name: localizeName.replace('-', ' '),
+    slug: story.slug
   };
 }
 

@@ -38,6 +38,7 @@ export interface Path {
 export interface Breadcrumb {
   path: string;
   name: string;
+  slug?: string;
 }
 
 export const LANGUAGES = ["en", "es"] as const;
