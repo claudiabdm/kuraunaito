@@ -5,8 +5,9 @@ import TheHeader from "../components/TheHeader.astro";
 import Meta from "../components/Meta.astro";
 import roboto400url from "@fontsource/roboto/files/roboto-latin-400-normal.woff2";
 import roboto700url from "@fontsource/roboto/files/roboto-latin-700-normal.woff2";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 
-const { title, slug, seo } = Astro.props;
+const { title, slug, seo, breadcrumbs = [] } = Astro.props;
 const fonts = [roboto400url, roboto700url];
 ---
 
@@ -33,6 +34,7 @@ const fonts = [roboto400url, roboto700url];
   <body>
     <TheHeader slug={slug} />
     <main>
+      {slug !== "home" && <Breadcrumbs breadcrumbs={breadcrumbs} />}
       <slot />
     </main>
   </body>

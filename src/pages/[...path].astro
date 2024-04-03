@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro";
 export async function getStaticPaths() {
   return generatePathsFromStories();
 }
-const { title, slug, lang } = Astro.props;
+const { title, slug, lang, breadcrumbs} = Astro.props;
 
 i18next.changeLanguage(lang);
 
@@ -35,7 +35,7 @@ const hasEntriesComponent = story.content.component === "EntriesEntry";
   }
 </Fragment>
 
-<Layout {...{ title, slug, seo: story.content.seo }}>
+<Layout {...{ title, slug, seo: story.content.seo, breadcrumbs }}>
   <StoryblokComponent
     {...Astro.props}
     blok={story?.content}

@@ -1,14 +1,13 @@
 ---
 import i18next, { t } from "i18next";
 import { formatDate, getSize, getStories } from "../utils/functions";
-import Breadcrumbs from "./Breadcrumbs.astro";
 import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "storyblok-rich-text-astro-renderer/RichTextRenderer.astro";
 import Svg from "./Svg.astro";
 import { Photo } from "astro-carousel";
 
 const { path } = Astro.params;
-const { blok, breadcrumbs } = Astro.props;
+const { blok } = Astro.props;
 
 const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
 const slugs = slugsArray?.map(
@@ -44,64 +43,61 @@ function calculateReadingTime(content: any[]) {
 }
 ---
 
-<div>
-  <Breadcrumbs breadcrumbs={breadcrumbs} />
-  <section class="blog">
-    <article>
-      <header class="blog__header">
-        <h3 class="blog__title">{blok.title}</h3>
-        <div class="blog__metadata">
-          <span>
-            <Svg
-              name="date"
-              aria-label="Last updated"
-              size="14"
-            />
-            {t("last-updated")}
-            <time
-              datetime={currentStory?.published_at}
-              class="blog__time"
-              >{publishedAt}</time
-            >
-          </span>
-          <span>
-            <Svg
-              name="time"
-              size="14"
-            />
-            <time class="blog__time">{readingTime}</time>
-            {t("minutes")}
-          </span>
-          <span>
-            <Svg
-              name="person"
-              aria-label="Written by"
-              size="14"
-            />
-            {blok.author}
-          </span>
-        </div>
-        <p class="blog__intro">{blok.intro}</p>
-        <div class="blog__image">
-          <Photo
-            src={blok.image.filename}
-            width={getSize(blok.image.filename).width}
-            height={getSize(blok.image.filename).height}
-            alt={blok.image.alt ?? ""}
-            widths={[360, 720, 1280]}
-            aspectRatio={getSize(blok.image.filename).width /
-              getSize(blok.image.filename).height}
-            loading="eager"
+<section class="blog">
+  <article>
+    <header class="blog__header">
+      <h3 class="blog__title">{blok.title}</h3>
+      <div class="blog__metadata">
+        <span>
+          <Svg
+            name="date"
+            aria-label="Last updated"
+            size="14"
           />
-        </div>
-      </header>
-      <RichTextRenderer
-        content={blok.article}
-        {...storyblokEditable(blok)}
-      />
-    </article>
-  </section>
-</div>
+          {t("last-updated")}
+          <time
+            datetime={currentStory?.published_at}
+            class="blog__time"
+            >{publishedAt}</time
+          >
+        </span>
+        <span>
+          <Svg
+            name="time"
+            size="14"
+          />
+          <time class="blog__time">{readingTime}</time>
+          {t("minutes")}
+        </span>
+        <span>
+          <Svg
+            name="person"
+            aria-label="Written by"
+            size="14"
+          />
+          {blok.author}
+        </span>
+      </div>
+      <p class="blog__intro">{blok.intro}</p>
+      <div class="blog__image">
+        <Photo
+          src={blok.image.filename}
+          width={getSize(blok.image.filename).width}
+          height={getSize(blok.image.filename).height}
+          alt={blok.image.alt ?? ""}
+          widths={[360, 720, 1280]}
+          aspectRatio={getSize(blok.image.filename).width /
+            getSize(blok.image.filename).height}
+          loading="eager"
+        />
+      </div>
+    </header>
+    <RichTextRenderer
+      content={blok.article}
+      {...storyblokEditable(blok)}
+    />
+  </article>
+</section>
 
 <style lang="scss">
   .blog {

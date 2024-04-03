@@ -1,21 +1,24 @@
 ---
 import { t } from "i18next";
-import { getStoryLocalizedPath, getStories } from "../utils/functions";
+import {
+  getStoryLocalizedPath,
+  getStories,
+  getStoriesLocalizedPath,
+} from "../utils/functions";
 import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
 import EntriesPhotoStack from "./EntriesPhotoStack.astro";
 
-const { blok } = Astro.props;
-const { path } = Astro.params;
-const slug = blok.slug || Astro.props.slug;
+const { blok, slug } = Astro.props;
+const entrySlug = blok.slug || slug;
 
 const {
   data: { stories },
-} = await getStories({ params: `starts_with=${slug}` });
+} = await getStories({ params: `starts_with=${entrySlug}` });
 
 // Display stories and folders that are in current folder
-const root = stories.find((s) => slug.includes(s.slug));
+const root = stories.find((s) => entrySlug.includes(s.slug));
 const level = root?.full_slug.split("/").length - 1;
 const storiesInRoot = stories
   .filter(
@@ -30,7 +33,7 @@ const storiesInRoot = stories
   )
   .map((story) => ({
     ...story,
-    ...getStoryLocalizedPath(story, path),
+    ...getStoryLocalizedPath(story),
     name: story.content.seo?.title ?? story.name,
   }));
 
@@ -43,7 +46,7 @@ if (withLimit) {
   }
   storiesInRoot.push({
     ...root,
-    ...getStoryLocalizedPath(root, path),
+    ...getStoryLocalizedPath(root),
     name: t("see-more"),
   });
 }
@@ -55,16 +58,15 @@ const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
   }
   return acc;
 }, {});
-
-const breadcrumbs = blok.withHome
-  ? Astro.props.breadcrumbs
-  : [getStoryLocalizedPath(root)];
 ---
 
 <div class="container">
   <section class="container__nav">
-    <Breadcrumbs breadcrumbs={breadcrumbs} />
-
+    {
+      slug === "home" && (
+        <Breadcrumbs breadcrumbs={getStoriesLocalizedPath([root])} />
+      )
+    }
     <ul
       class:list={["linkList", { "linkList--limit": withLimit }]}
       data-entry-list
@@ -128,9 +130,9 @@ const breadcrumbs = blok.withHome
 </div>
 
 <style lang="scss">
-  $padding-y-body: calc(#{var(--space-xs-s)} + #{var(--space-xs-s)});
+  $padding-y-body: calc(#{var(--space-s-m)} + #{var(--space-s-m)});
   $nav-height: var(--step-2);
-  $margin-top-header: var(--space-xl-2xl);
+  $margin-top-header: var(--space-l-xl);
   $breadcrumbs-height: var(--step-2);
   $max-height: calc(
     100vh - $padding-y-body - $nav-height - $margin-top-header -
@@ -148,6 +150,10 @@ const breadcrumbs = blok.withHome
     &__nav {
       display: inline-block;
       justify-self: flex-start;
+    }
+
+    &__title {
+      text-transform: capitalize;
     }
   }
 

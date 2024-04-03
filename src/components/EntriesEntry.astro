@@ -1,11 +1,10 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
 import { Carousel, Photo } from "astro-carousel";
-import Breadcrumbs from "./Breadcrumbs.astro";
 import type { ComponentProps } from "astro/types";
 import { getSize } from "../utils/functions";
 
-const { blok, breadcrumbs } = Astro.props;
+const { blok } = Astro.props;
 const { path } = Astro.params;
 
 const images: ComponentProps<typeof Carousel>["images"] = (
@@ -48,53 +47,47 @@ const imagesGrid = images.map((img, i) => ({
 
 <Carousel images={images} />
 
-<div class="entry">
-  <Breadcrumbs breadcrumbs={breadcrumbs} />
-  <ul
-    class="entry__entries"
-    {...storyblokEditable(blok)}
-    id="carouselTargetList"
-  >
-    {
-      imagesGrid.map((img, i) => {
-        return (
-          <li class="entry__elem">
-            <div class="entry__elem-hover">
-              <a
-                href={`/${path}?image=${i}`}
-                data-carousel-index={i}
-                class="entry__link"
-                aria-label={`Open image ${img.title || i}`}
-              >
-                <Photo {...img} />
-              </a>
-            </div>
-          </li>
-        );
-      })
-    }
-  </ul>
-</div>
+<ul
+  class="entry"
+  {...storyblokEditable(blok)}
+  id="carouselTargetList"
+>
+  {
+    imagesGrid.map((img, i) => {
+      return (
+        <li class="entry__elem">
+          <div class="entry__elem-hover">
+            <a
+              href={`/${path}?image=${i}`}
+              data-carousel-index={i}
+              class="entry__link"
+              aria-label={`Open image ${img.title || i}`}
+            >
+              <Photo {...img} />
+            </a>
+          </div>
+        </li>
+      );
+    })
+  }
+</ul>
 
 <style lang="scss" define:vars={{ numOfPhotos: imagesGrid.length }} is:global>
   .entry {
     display: grid;
     gap: var(--space-s-m);
     padding-bottom: var(--space-s-m);
-    &__entries {
+    display: grid;
+    gap: var(--space-m);
+    margin: var(--space-m) 0 0 0;
+    padding: 0;
+    list-style: none;
+    @media screen and (min-width: 732px) {
       display: grid;
-      gap: var(--space-m);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-
-      @media screen and (min-width: 732px) {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        grid-auto-rows: var(--maxHeight);
-        gap: var(--space-xl);
-        align-items: center;
-      }
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-auto-rows: var(--maxHeight);
+      gap: var(--space-xl);
+      align-items: center;
     }
 
     &__elem {
