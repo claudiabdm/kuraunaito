@@ -78,11 +78,11 @@ const breadcrumbs = blok.withHome
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
-              height="50"
-              viewBox="0 0 25 50"
+              height="70"
+              viewBox="0 0 25 70"
               fill="none"
               stroke="var(--secondary)"
-              stroke-width="1.5"
+              stroke-width="1"
             >
               <line
                 x1="1"
@@ -96,14 +96,22 @@ const breadcrumbs = blok.withHome
                 x1="1"
                 y1="1"
                 x2="1"
-                y2={i < storiesInRoot.length - 1 ? 50 : 25}
+                y2={i < storiesInRoot.length - 1 ? 70 : 25}
               />
             </svg>
+
             <Link
               href={`/${s.path}`}
               ellipsis={true}
             >
-              <div class="linkList__name">{t(s.name)}</div>
+              <div
+                class:list={[
+                  "linkList__name",
+                  { "linkList__name--bold": t(s.name) === t("see-more") },
+                ]}
+              >
+                {t(s.name)}
+              </div>
               {t(s.name) != t("see-more") && (
                 <div class="linkList__date">
                   {getDate(s.content.from, s.content.to)}
@@ -164,9 +172,16 @@ const breadcrumbs = blok.withHome
     &__elem {
       display: grid;
       grid-template-columns: auto 1fr;
-      height: 48px;
+      height: 60px;
       align-items: center;
       gap: 0 var(--space-3xs);
+    }
+
+    &__name {
+      &--bold {
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
     }
 
     &__date {
