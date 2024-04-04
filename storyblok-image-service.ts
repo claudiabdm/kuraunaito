@@ -52,9 +52,9 @@ const service: ExternalImageService = {
         return url;
     },
     getHTMLAttributes(options: StoryblokImageTransform) {
-        const { src, format, quality, ...attributes } = options;
+        const { src, format, quality, filters, ...attributes } = options;
         return {
-            ...attributes
+            ...attributes,
         };
     }
 };
