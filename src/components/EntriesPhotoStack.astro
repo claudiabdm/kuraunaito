@@ -121,7 +121,7 @@ const { photos } = Astro.props;
     .photo-stack {
         position: relative;
         display: grid;
-        grid-template-columns: minmax(auto, 380px);
+        grid-template-columns: 0.85fr;
         grid-template-rows: auto;
         justify-content: center;
         align-items: start;
@@ -129,6 +129,7 @@ const { photos } = Astro.props;
         margin-top: var(--space-xl);
 
         @media screen and (min-width: 732px) {
+            grid-template-columns: 0.8fr;
             justify-content: end;
             align-content: space-between;
             align-items: center;
