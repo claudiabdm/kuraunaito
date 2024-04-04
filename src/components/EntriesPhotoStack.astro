@@ -101,8 +101,8 @@ const { photos } = Astro.props;
                             width={getSize(filename).width}
                             height={getSize(filename).height}
                             alt=""
-                            widths={[360, 600]}
-                            loading={index < arr.length - 4 ? "lazy" : "eager"}
+                            widths={[360, 520]}
+                            loading={index < arr.length - 5 ? "lazy" : "eager"}
                             aspectRatio={
                                 getSize(filename).width /
                                 getSize(filename).height
@@ -121,7 +121,7 @@ const { photos } = Astro.props;
     .photo-stack {
         position: relative;
         display: grid;
-        grid-template-columns: 0.8fr;
+        grid-template-columns: minmax(auto, 380px);
         grid-template-rows: auto;
         justify-content: center;
         align-items: start;
@@ -129,7 +129,6 @@ const { photos } = Astro.props;
         margin-top: var(--space-xl);
 
         @media screen and (min-width: 732px) {
-            grid-template-columns: 0.85fr;
             justify-content: end;
             align-content: space-between;
             align-items: center;
@@ -146,7 +145,7 @@ const { photos } = Astro.props;
             grid-row: 1;
             grid-column: 1;
             background-color: #fff;
-            box-shadow: 0 0 20px 1px rgb(202, 202, 202, 0.5);
+            box-shadow: 0 0 8px 2px rgb(202, 202, 202, 0.25);
             transition: transform 0.5s cubic-bezier(0.36, 0.07, 0.25, 1);
 
             $numOfPhotos: var(--numOfPhotos);
