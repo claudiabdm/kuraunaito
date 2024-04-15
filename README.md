@@ -23,4 +23,4 @@ This website is my personal photography journal where I will share my travel exp
 - Cloudflare Pages
 
 ## TODO
-- [] Migrate to Astro content collection to avoid importing unused css to pages
+- [ ] Migrate to Astro content collection to avoid importing unused css to pages
