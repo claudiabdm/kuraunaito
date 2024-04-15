@@ -18,7 +18,7 @@ This website is my personal photography journal where I will share my travel exp
 - TypeScript
 - SCSS
 - Astro
-- Motion One
+- Motion One (only inView function)
 - Storyblok CMS
 - Cloudflare Pages
 
