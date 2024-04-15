@@ -1,8 +1,13 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
-import { Carousel, Photo } from "astro-carousel";
+import { Carousel, Photo as PhotoCarousel } from "astro-carousel";
 import type { ComponentProps } from "astro/types";
 import { getSize } from "../utils/functions";
+import type { StoryblokImageTransform } from "astro-storyblok-image-service/types";
+
+const Photo: (
+  props: ComponentProps<typeof PhotoCarousel> & StoryblokImageTransform,
+) => void = PhotoCarousel;
 
 const { blok } = Astro.props;
 const { path } = Astro.params;
@@ -74,9 +79,6 @@ const imagesGrid = images.map((img, i) => ({
 
 <style lang="scss" define:vars={{ numOfPhotos: imagesGrid.length }} is:global>
   .entry {
-    display: grid;
-    gap: var(--space-s-m);
-    padding-bottom: var(--space-s-m);
     display: grid;
     gap: var(--space-m);
     margin: var(--space-m) 0 0 0;

@@ -23,13 +23,12 @@ export default defineConfig({
     prefetchAll: true
   },
   build: {
-    inlineStylesheets: 'auto'
+    inlineStylesheets: 'never'
   },
   image: {
     domains: ["a.storyblok.com"],
     service: {
-      entrypoint: './storyblok-image-service',
-      endpoint: `https://a.storyblok.com/f/${process.env.STORYBLOK_SPACE_ID}`, // https://www.storyblok.com/tp/optimize-your-storyblok-images-with-image-engine#structure-of-the-url-of-an-image
+      entrypoint: 'astro-storyblok-image-service',
     }
   },
   integrations: [
