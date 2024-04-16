@@ -6,12 +6,20 @@ interface Props {
     photos: Record<string, string>;
 }
 const { photos } = Astro.props;
+
+// str-length function in SCSS counts the number of characters in a string
+// so we can create a string with length equal to the number of photos 
+// by adding a character string (in this case a '1') for each photo 
+// in the string SCSS variable.
+// Number of photos: 20
+// SCSS variable: '11111111111111111111'
+const numOfPhotosSCSS = Object.keys(photos)
+    .map(() => "1")
+    .join("");
 ---
 
 <script>
     export class AstroPhotoStack extends HTMLElement {
-        lastTarget: string = null;
-
         constructor() {
             super();
             this._init();
@@ -54,12 +62,12 @@ const { photos } = Astro.props;
                     const animations = photoElem.getAnimations();
                     if (e.type === "mouseenter") {
                         photoElem.classList.add("photo-stack__elem--up");
-                        photoElem.classList.add("photo-stack__elem--show");
                         Object.entries(photos).forEach(([_, el]) => {
                             if (el !== photoElem) {
                                 el.classList.remove("photo-stack__elem--up");
                             }
                         });
+                        photoElem.classList.add("photo-stack__elem--show");
                     }
                     if (e.type === "mouseleave") {
                         if (animations.length < 1) {
@@ -93,7 +101,7 @@ const { photos } = Astro.props;
             ([path, filename], index, arr) =>
                 path && (
                     <div
-                        class="photo-stack__elem"
+                        class={`photo-stack__elem num-${index + 1}`}
                         data-photo-stack-path={path}
                     >
                         <Photo
@@ -116,7 +124,7 @@ const { photos } = Astro.props;
     }
 </astro-photo-stack>
 
-<style lang="scss" define:vars={{ numOfPhotos: photos.length }}>
+<style lang="scss" define:vars={{ numOfPhotosSCSS }}>
     @use "sass:math";
     .photo-stack {
         position: relative;
@@ -149,13 +157,13 @@ const { photos } = Astro.props;
             box-shadow: 0 0 8px 2px rgb(202, 202, 202, 0.25);
             transition: transform 0.5s cubic-bezier(0.36, 0.07, 0.25, 1);
 
-            $numOfPhotos: var(--numOfPhotos);
+            $numOfPhotos: str-length(var(--numOfPhotosSCSS));
             $rotateInitial: rotate(0);
             $rotate: rotate(0);
             $translateInitial: translate3d(0, 0, 0);
             $translate: translate3d(0, 0, 0);
 
-            @for $i from 1 through str-length($numOfPhotos) {
+            @for $i from 1 through $numOfPhotos {
                 @if $i % 2 == 0 {
                     $rotateInitial: rotate(#{$i + math.random()}deg);
                     $rotate: rotate(-#{0.5 * $i + math.random()}deg);
