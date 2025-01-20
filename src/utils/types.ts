@@ -1,3 +1,5 @@
+import type { Language } from "../i18n/ui";
+
 export interface SbLink {
   id: string;
   parent_id: string;
@@ -40,10 +42,6 @@ export interface Breadcrumb {
   name: string;
   slug?: string;
 }
-
-export const LANGUAGES = ["en", "es"] as const;
-
-export type Language = (typeof LANGUAGES)[number];
 
 export interface Image {
   width: number;

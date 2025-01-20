@@ -1,7 +1,6 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import storyblok from "@storyblok/astro";
-import astroI18next from "astro-i18next";
 import AstroPWA from '@vite-pwa/astro';
 import * as dotenv from "dotenv";
 
@@ -31,6 +30,10 @@ export default defineConfig({
       entrypoint: 'astro-storyblok-image-service',
     }
   },
+  i18n: {
+    locales: ["es", "en"],
+    defaultLocale: "en",
+  },
   integrations: [
     sitemap({
       i18n: {
@@ -57,7 +60,6 @@ export default defineConfig({
         aboutPhoto: "components/AboutPhoto",
       },
     }),
-    astroI18next(),
     AstroPWA({
       manifest: {
         name: 'Kuraunaito',

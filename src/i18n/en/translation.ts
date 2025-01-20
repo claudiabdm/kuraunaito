@@ -1,4 +1,4 @@
-{
+export const en = {
   "home": "home",
   "photos": "photos",
   "about-me": "about-me",

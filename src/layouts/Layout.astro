@@ -1,20 +1,22 @@
 ---
-import i18next from "i18next";
 import "../styles/global.css";
 import TheHeader from "../components/TheHeader.astro";
 import Meta from "../components/Meta.astro";
 import roboto400url from "@fontsource/roboto/files/roboto-latin-400-normal.woff2";
 import roboto700url from "@fontsource/roboto/files/roboto-latin-700-normal.woff2";
-import { pwaInfo } from 'virtual:pwa-info';
+import { pwaInfo } from "virtual:pwa-info";
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { getLangFromUrl } from "../i18n/utils";
 
 const { title, slug, seo, breadcrumbs = [] } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+
 const fonts = [roboto400url, roboto700url];
 ---
 
 <!doctype html>
-<html lang={i18next.language}>
+<html lang={lang}>
   <head>
     <Meta
       meta={seo}

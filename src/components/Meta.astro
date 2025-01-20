@@ -1,8 +1,10 @@
 ---
-import { t } from "i18next";
 import { getImage } from "astro:assets";
+import { useTranslations } from "../i18n/utils";
 
 const { meta, title } = Astro.props;
+
+const t = useTranslations(Astro.url);
 
 const capitalizeTitle = (meta?.title || title || "")
   .split(" ")

@@ -1,11 +1,13 @@
 ---
-import i18next, { t } from "i18next";
 import { getStoriesLocalizedPath, getStories } from "../utils/functions";
 import Link from "./Link.astro";
-import { LANGUAGES } from "../utils/types";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import { defaultLang, LANGUAGES, type Language } from "../i18n/ui";
 
-const { path } = Astro.params;
 const { slug } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(Astro.url);
 
 // Get menu links from config file
 const {
@@ -20,16 +22,12 @@ const {
 });
 
 // Formatted links
-function langPath(l) {
+function langPath(l: Language) {
   let root = slug.split("/")[0];
-  const slugLocalized = slug
-    .replace(root, t(root, { lng: l }))
-    .replace(t("home", { lng: l }), "");
-  return l !== "en"
-    ? `/${l}/${slugLocalized}`
-    : `/${slugLocalized.replace("home", "")}`;
+  const slugLocalized = slug.replace(root, t(root, l)).replace(t("home", l), "");
+  return l !== "en" ? `/${l}/${slugLocalized}` : `/${slugLocalized.replace("home", "")}`;
 }
-const links = getStoriesLocalizedPath(stories);
+const links = getStoriesLocalizedPath(stories, lang);
 ---
 
 <header class="header">
@@ -40,7 +38,7 @@ const links = getStoriesLocalizedPath(stories);
       translate="no"
     >
       <Link
-        href={`/${i18next.language == "es" ? "es" : ""}`}
+        href={`/${lang == defaultLang ? "" : lang}`}
         first={true}
       >
         クラウナイト
@@ -53,8 +51,8 @@ const links = getStoriesLocalizedPath(stories);
         <section class="nav__group">
           {links?.map((l) => (
             <Link
-              href={`/${l.path.replace(t("home"), "")}`}
-              inactive={!slug.includes(`${l.slug}`)}
+            href={`/${l.path}`}
+            inactive={!slug.includes(`${l.slug}`)}
             >
               {l.name}
             </Link>
@@ -73,7 +71,7 @@ const links = getStoriesLocalizedPath(stories);
           <>
             <Link
               href={langPath(l)}
-              inactive={i18next.language !== l}
+              inactive={lang !== l}
             >
               {l}
             </Link>

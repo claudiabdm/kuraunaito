@@ -1,26 +1,17 @@
 ---
-import i18next, { t } from "i18next";
-import { formatDate, getSize, getStories } from "../utils/functions";
+import { formatDate, getSize } from "../utils/functions";
 import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "storyblok-rich-text-astro-renderer/RichTextRenderer.astro";
 import Svg from "./Svg.astro";
 import { Photo } from "astro-carousel";
+import { useTranslations, getLangFromUrl } from "../i18n/utils";
 
-const { path } = Astro.params;
 const { blok } = Astro.props;
 
-const slugsArray = path?.replace(`${i18next.language}/`, "").split("/");
-const slugs = slugsArray?.map(
-  (_, i) =>
-    slugsArray.slice(0, i + 1).join("/") +
-    (i < slugsArray.length - 1 || i === 0 ? "/" : ""),
-);
+const t = useTranslations(Astro.url);
+const lang = getLangFromUrl(Astro.url);
 
-const {
-  data: { stories },
-} = await getStories({ params: `by_slugs=${slugs}` });
-const currentStory = stories.find((s) => s.full_slug === path);
-const publishedAt = formatDate(currentStory?.published_at);
+const publishedAt = formatDate(blok.published_at, lang);
 
 const readingTime = calculateReadingTime(blok.article.content);
 
@@ -56,7 +47,7 @@ function calculateReadingTime(content: any[]) {
           />
           {t("last-updated")}
           <time
-            datetime={currentStory?.published_at}
+            datetime={publishedAt}
             class="blog__time"
             >{publishedAt}</time
           >

@@ -1,7 +1,9 @@
 ---
-import { t } from "i18next";
 import Layout from "../layouts/Layout.astro";
 import Link from "../components/Link.astro";
+import { useTranslations } from "../i18n/utils";
+
+const t = useTranslations(Astro.url);
 ---
 
 <Layout

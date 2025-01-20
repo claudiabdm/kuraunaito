@@ -1,5 +1,4 @@
 ---
-import { t } from "i18next";
 import {
   getStoryLocalizedPath,
   getStories,
@@ -9,9 +8,13 @@ import { getDate } from "../utils/functions";
 import Breadcrumbs from "./Breadcrumbs.astro";
 import Link from "./Link.astro";
 import EntriesPhotoStack from "./EntriesPhotoStack.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const { blok, slug } = Astro.props;
 const entrySlug = blok.slug || slug;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(Astro.url);
 
 const {
   data: { stories },
@@ -33,7 +36,7 @@ const storiesInRoot = stories
   )
   .map((story) => ({
     ...story,
-    ...getStoryLocalizedPath(story),
+    ...getStoryLocalizedPath(story, lang),
     name: story.content.seo?.title ?? story.name,
   }));
 
@@ -46,7 +49,7 @@ if (withLimit) {
   }
   storiesInRoot.push({
     ...root,
-    ...getStoryLocalizedPath(root),
+    ...getStoryLocalizedPath(root, lang),
     name: t("see-more"),
   });
 }
@@ -64,7 +67,7 @@ const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
   <section class="container__nav">
     {
       slug === "home" && (
-        <Breadcrumbs breadcrumbs={getStoriesLocalizedPath([root])} />
+        <Breadcrumbs breadcrumbs={getStoriesLocalizedPath([root], lang)} />
       )
     }
     <ul
@@ -116,7 +119,7 @@ const photos = storiesInRoot.reduce<{ [key: string]: string }>((acc, story) => {
               </div>
               {t(s.name) != t("see-more") && (
                 <div class="linkList__date">
-                  {getDate(s.content.from, s.content.to)}
+                  {getDate(s.content.from, s.content.to, lang)}
                 </div>
               )}
             </Link>

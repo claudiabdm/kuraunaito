@@ -1,4 +1,4 @@
-{
+export const es = {
   "home": "inicio",
   "photos": "fotos",
   "about-me": "sobre-mi",

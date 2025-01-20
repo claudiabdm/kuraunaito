@@ -1,47 +1,30 @@
-import i18next, { t } from "i18next";
 import { useStoryblokApi } from "@storyblok/astro";
 import {
-  LANGUAGES,
   type Breadcrumb,
-  type Language,
   type Path,
   type SbLink,
   type Story,
 } from "./types";
+import { t } from "../i18n/utils";
+import { defaultLang, LANGUAGES, type Language } from "../i18n/ui";
 
 const DEFAULT_PATH: {
-  [k in Language | "default"]: Path;
+  [k in Language]: Path;
 } = {
-  default: {
-    params: {
-      path: '',
-    },
-    props: {
-      title: "home",
-      slug: "home",
-      lang: "en",
-      breadcrumbs: [
-        {
-          path: "",
-          name: t("home", { lng: "en" }),
-        },
-      ],
-    },
-  },
   ...LANGUAGES.reduce(
     (acc, lang) => {
       acc[lang] = {
         params: {
-          path: lang,
+          path: lang == defaultLang ? undefined : lang,
         },
         props: {
-          title: t("home", { lng: lang }),
+          title: t("home", lang),
           slug: "home",
           lang: lang,
           breadcrumbs: [
             {
-              path: lang,
-              name: t("home", { lng: lang }),
+              path: lang == defaultLang ? "" : lang,
+              name: t("home", lang),
             },
           ],
         },
@@ -55,14 +38,14 @@ const DEFAULT_PATH: {
 };
 function massageLink(
   link: SbLink,
-  lang?: Language,
-  breadcrumbs: Breadcrumb[] = DEFAULT_PATH[lang ?? "default"].props.breadcrumbs
+  lang: Language = defaultLang,
+  breadcrumbs: Breadcrumb[] = DEFAULT_PATH[lang].props.breadcrumbs
 ): Path {
   const root = link.slug.split("/")[0];
 
-  if (lang) {
-    const path = `${lang}/${link.slug.replace(root, t(root, { lng: lang }))}`;
-    const localizedName = t(link.name.toLowerCase().replace(' ', '-'), { lng: lang }).replace('-', ' ');
+  if (lang !== "en") {
+    const path = `${lang}/${link.slug.replace(root, t(root, lang))}`;
+    const localizedName = t(link.name.toLowerCase().replace(' ', '-'), lang).replace('-', ' ');
     return {
       params: { path },
       props: {
@@ -100,7 +83,7 @@ function massageLink(
 
 function massageLinks(
   dataLinks: SbLink[],
-  lang?: Language,
+  lang: Language = defaultLang,
   breadcrumbs?: Breadcrumb[]
 ): Path[] {
   const links: Path[] = [];
@@ -133,10 +116,10 @@ export async function generatePathsFromStories() {
 
     // Format links to astro static paths
     const links = massageLinks(dataLinks);
-    links.push(parent.default);
+    links.push(parent[defaultLang]);
 
     for (const lang of LANGUAGES) {
-      if (lang !== 'en') {
+      if (lang !== defaultLang) {
         links.push(parent[lang]);
         links.push(...massageLinks(dataLinks, lang));
       }
@@ -144,7 +127,7 @@ export async function generatePathsFromStories() {
 
     return links;
   } catch (err) {
-    console.error("generatePathFromStories", err);
+    console.error("generatePathsFromStories", err);
   }
   return [];
 }
@@ -152,23 +135,29 @@ export async function generatePathsFromStories() {
 // With params and without slug
 export async function getStories({
   params,
+  lang
 }: {
   params: string;
+  lang?: Language
 }): Promise<{ data: { stories: Story[] }; header: string }>;
 // With slug
 export async function getStories({
   slug,
+  lang
 }: {
   params?: string;
+  lang?: Language
   slug: string;
 }): Promise<{ data: { story: Story }; header: string }>;
 // Function definition
 export async function getStories({
   params,
   slug,
+  lang = defaultLang
 }: {
   params?: string;
   slug?: string;
+  lang?: Language
 }): Promise<{
   data: { stories?: Story[]; story?: Story };
   header: Object;
@@ -184,7 +173,7 @@ export async function getStories({
       `cdn/stories${slug ? `/${slug}` : ""}`,
       {
         ...paramsObj,
-        language: i18next.language,
+        language: lang,
         version: getVersion(),
       }
     );
@@ -208,19 +197,21 @@ export function getToken() {
 
 export function getStoriesLocalizedPath(
   stories: any[],
+  lang: Language = defaultLang
 ): Breadcrumb[] {
-  return stories.map((s) => getStoryLocalizedPath(s));
+  return stories.map((s) => getStoryLocalizedPath(s, lang));
 }
 
 export function getStoryLocalizedPath(
   story: any,
+  lang: Language = defaultLang
 ): Breadcrumb {
   const folder =
     story.lang === "default"
       ? story.full_slug.split("/")[0]
       : story.full_slug.split("/")[1];
-  const localizedPath = story.full_slug.replace(folder, t(folder));
-  const localizeName = t(story.name.toLowerCase().replace(' ', '-'));
+  const localizedPath = lang === "en" ? story.full_slug : `${lang}/${story.full_slug.replace(folder, t(folder, lang))}`;
+  const localizeName = t(story.name.toLowerCase().replace(' ', '-'), lang);
   return {
     path: localizedPath,
     name: localizeName.replace('-', ' '),
@@ -228,16 +219,16 @@ export function getStoryLocalizedPath(
   };
 }
 
-export function getDate(fromDate: string, toDate?: string) {
-  const from = formatDate(fromDate);
-  const to = formatDate(toDate);
+export function getDate(fromDate: string, toDate?: string, lang: string = defaultLang) {
+  const from = formatDate(fromDate, lang);
+  const to = formatDate(toDate, lang);
   const dateField = (toDate == null || toDate == '') ? from : `${from} - ${to}`;
   return dateField;
 }
 
 export function formatDate(
   date: string,
-  lang: string = i18next.language,
+  lang: string = defaultLang,
   short: boolean = false
 ) {
   const dtFormat = new Intl.DateTimeFormat(lang, {
