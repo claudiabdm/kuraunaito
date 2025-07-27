@@ -18,7 +18,7 @@ const t = useTranslations(Astro.url);
 
 const {
   data: { stories },
-} = await getStories({ params: `starts_with=${entrySlug}` });
+} = await getStories({ params: `starts_with=${entrySlug}&per_page=100` });
 
 // Display stories and folders that are in current folder
 const root = stories.find((s) => entrySlug.includes(s.slug));
