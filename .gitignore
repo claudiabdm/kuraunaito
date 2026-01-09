@@ -23,3 +23,6 @@ pnpm-debug.log*
 *.pem
 # Local Netlify folder
 .netlify
+
+# wrangler
+wrangler.toml
